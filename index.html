@@ -256,6 +256,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 .rbtns{display:flex;gap:8px;flex-wrap:wrap}
 .lbmore{display:block;width:calc(100% - 16px);margin:0 8px 8px;padding:10px;border-radius:10px;border:1px dashed var(--line);font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--mute)}
 .lbmore:hover{color:var(--ink);border-color:var(--mute)}
+.remind.on{background:linear-gradient(90deg,rgba(52,210,123,.16),var(--panel));border-color:rgba(52,210,123,.45)}
+.remind.on b{color:var(--good)}
+.remind.blocked{border-color:rgba(227,38,47,.5);background:linear-gradient(90deg,rgba(227,38,47,.14),var(--panel))}
+.rhelp{margin:8px 0 0;padding-left:18px;font-size:14px;color:#DDE3F0;display:grid;gap:6px}
 /* tabs */
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
 .tabs button{padding:10px 2px;white-space:nowrap;border-radius:9px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:4px}
@@ -871,15 +875,16 @@ function render(){
     </section>` : ""}
     <p class="foot">Discipline is doing it when nobody's checking. Stronger, faster, quicker by tip-off.</p>
     ${canOfferInstall() ? `<p class="save"><button class="linkbtn" id="instLink">Install on this phone</button></p>` : ""}
-    ${me && pushSupported() && pushOn() ? `<p class="save">Reminders on · <button class="linkbtn" id="pushTest" style="color:var(--mute)">Send a test</button> · <button class="linkbtn" id="pushOff" style="color:var(--mute)">Turn off</button></p>` : me && pushSupported() && LS.get("fd_push_hide", false) && !pushOn() ? `<p class="save"><button class="linkbtn" id="pushOn">Turn on daily reminders</button></p>` : ""}
+    ${me && pushSupported() && !pushOn() && pushPerm() !== "denied" && LS.get("fd_push_hide", false) ? `<p class="save"><button class="linkbtn" id="pushUnhide">Turn on daily reminders</button></p>` : ""}
     <p class="save">${shared ? "Scores sync live for the whole family." : "Connecting to the scoreboard…"}${pinOK ? "" : ` · <button class="linkbtn" id="pinOpenBtn" style="color:var(--mute)">Enter family PIN</button>`}</p>
   </div>
   ${!me || picking || adding ? pickHtml() : ""}
   ${sheet ? sheetHtml() : ""}
-  ${me && !picking && !adding && !pinOpen && !installSheet && canOfferInstall() && !installSnoozed() ? `<div class="install ${installAnimated ? "" : "anim"}" role="region" aria-label="Install 50 Deep">
+  ${me && !picking && !adding && !pinOpen && !installSheet && !remindAsk && canOfferInstall() && !installSnoozed() ? `<div class="install ${installAnimated ? "" : "anim"}" role="region" aria-label="Install 50 Deep">
     <img src="icon-192.png" alt=""><div class="it"><b>Add to home screen</b><span>One tap to log reps, like an app.</span></div>
     <button class="btn go" id="instGo">Install</button><button class="x" id="instX" aria-label="Not now">✕</button></div>` : ""}
   ${installSheet ? installSheetHtml() : ""}
+  ${remindAsk && me && !picking && !adding ? remindAskHtml() : ""}
   ${pinOpen ? `<div class="pick" role="dialog" aria-modal="true" aria-label="Family PIN"><div class="box">
     <div class="lbl">50 Deep</div><h2>Family PIN</h2>
     <p class="readonly">Enter the 4-digit PIN once on this phone to start logging. Anyone can watch the scoreboard.</p>
@@ -1315,8 +1320,14 @@ app.addEventListener("click", ev => {
     if (v === FAMILY_PIN){ pinOK = true; LS.set("fd_pin", v); pinOpen = false; if (pinThenAdd){ pinThenAdd = false; adding = true; newName = ""; newTeam = ""; newColor = null; } render(); toast("Unlocked. Go get your reps."); sfx("done"); }
     else { toast("That PIN isn't right. Try again."); sfx("down"); } return; }
   if (t.id === "pinX"){ pinOpen = false; pinThenAdd = false; render(); return; }
-  if (t.dataset.me){ me = t.dataset.me; LS.set("fd_me", me); openEntry = null; picking = false; render(); syncPushPlayer(); return; }
+  if (t.dataset.me){ me = t.dataset.me; LS.set("fd_me", me); openEntry = null; picking = false;
+    if (pushSupported() && pushPerm() === "default" && !LS.get("fd_asked", false) && !M.post) remindAsk = true;
+    else if (!pushSupported() && isIOS && !isStandalone() && !LS.get("fd_asked", false) && !M.post) remindAsk = true;
+    render(); syncPushPlayer(); return; }
+  if (t.id === "askYes"){ remindAsk = false; LS.set("fd_asked", true); if (pushNeedsInstall() || !pushSupported()){ installSheet = true; render(); } else { render(); enablePush(); } return; }
+  if (t.id === "askNo"){ remindAsk = false; LS.set("fd_asked", true); render(); return; }
   if (t.id === "pushOn"){ enablePush(); return; }
+  if (t.id === "pushUnhide"){ LS.set("fd_push_hide", false); render(); const c = document.querySelector(".remind"); c && c.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
   if (t.id === "pushHide"){ LS.set("fd_push_hide", true); render(); return; }
   if (t.id === "pushOff"){ disablePush(); return; }
   if (t.id === "pushTest"){ testPush(); return; }
@@ -1728,13 +1739,14 @@ async function enablePush(){
   if (pushNeedsInstall()){ installSheet = true; render(); toast("On iPhone, add 50 Deep to your home screen first, then turn on reminders from the app."); return; }
   try {
     const perm = await Notification.requestPermission();
-    if (perm !== "granted"){ toast("Reminders are blocked. You can allow notifications for this site in your phone's settings."); render(); return; }
+    if (perm !== "granted"){ render(); const c = document.querySelector(".remind"); c && c.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
     const reg = await navigator.serviceWorker.ready;
     const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(VAPID_PUBLIC) });
     const r = await fetch(PUSH_API + "/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ player: me, sub: sub.toJSON() }) });
     if (!r.ok) throw new Error("save failed");
     LS.set("fd_push", me); await tellWorker();
-    toast("Reminders are on: 7:00 AM, 5:30 PM and 8:45 PM."); sfx("done"); render();
+    toast("Reminders are on. Sending you a test now…"); sfx("done"); render();
+    setTimeout(testPush, 1500);
   } catch (e){ toast("Couldn't turn on reminders. Check your connection and try again."); }
 }
 async function disablePush(){
@@ -1751,14 +1763,33 @@ async function syncPushPlayer(){
     LS.set("fd_push", me); tellWorker();
   } catch {}
 }
+const pushPerm = () => { try { return Notification.permission; } catch { return "default"; } };
 function reminderCard(){
-  if (!me || !pushSupported() || M.post) return "";
-  if (pushOn()) return "";
+  if (!me || M.post) return "";
+  const help = `<ul class="rhelp">${isIOS ? `<li><b>iPhone:</b> open the phone's <b>Settings</b> → <b>Notifications</b> → <b>50 Deep</b> → turn on <b>Allow Notifications</b>. Then come back and tap Try again.</li>`
+    : isAndroid ? `<li><b>Android:</b> tap the <b>lock</b> (or ⋮ → <b>Site settings</b>) next to the web address → <b>Notifications</b> → <b>Allow</b>. Then tap Try again.</li>`
+    : `<li>This browser is blocking notifications. Reminders are meant for your phone: open 50 Deep there, tap your name, and allow them.</li>`}</ul>`;
+  if (!pushSupported()) return isIOS ? `<section class="remind"><div><b>Daily reminders</b><span>On iPhone, reminders work once 50 Deep is on your home screen. Add it, open it from the icon, and turn them on here.</span></div>
+    <div class="rbtns"><button class="btn go" id="instLink">Add to home screen</button></div></section>` : "";
+  if (pushOn()) return `<section class="remind on"><div><b>Reminders on ✓</b><span>7:00 AM game plan · 5:30 PM check-in · 8:45 PM last call if you're not done.</span></div>
+    <div class="rbtns"><button class="btn go" id="pushTest">Send a test</button><button class="btn no" id="pushOff">Turn off</button></div></section>`;
+  if (pushPerm() === "denied") return `<section class="remind blocked"><div><b>Reminders are blocked</b><span>Your ${isIOS || isAndroid ? "phone" : "browser"} said no to notifications for 50 Deep. Here's how to fix it:</span>${help}</div>
+    <div class="rbtns"><button class="btn go" id="pushOn">Try again</button></div></section>`;
   if (LS.get("fd_push_hide", false)) return "";
   return `<section class="remind"><div><b>Daily reminders</b><span>A game plan at 7:00 AM, a check-in at 5:30 PM, and a last call at 8:45 PM if you're not done. Personal to your spot on the board.</span></div>
-    <div class="rbtns"><button class="btn go" id="pushOn">${pushNeedsInstall() ? "Install app first" : "Turn on reminders"}</button><button class="btn no" id="pushHide">No thanks</button></div></section>`;
+    <div class="rbtns"><button class="btn go" id="pushOn">${pushNeedsInstall() ? "Add to home screen first" : "Turn on reminders"}</button><button class="btn no" id="pushHide">Not now</button></div></section>`;
 }
-
+/* ask right after someone picks their name (once per phone) */
+function remindAskHtml(){
+  const T = pc(me);
+  return `<div class="pick" role="dialog" aria-modal="true" aria-label="Daily reminders"><div class="box">
+    <span class="emb" style="color:${T.hex};display:flex;justify-content:center">${emblem(T.icon, 60)}</span>
+    <h2>Want daily reminders, ${esc(P[me].name)}?</h2>
+    <p class="readonly" style="font-size:16px;color:#C9D1E3">A game plan at 7:00 AM, a check-in at 5:30 PM, and a last call at 8:45 PM if you haven't finished. Written for your spot on the leaderboard.</p>
+    <button class="btn go" id="askYes" style="justify-content:center;font-size:18px;padding:14px">${pushNeedsInstall() ? "Show me how (iPhone)" : "Yes, allow notifications"}</button>
+    <button class="btn no" id="askNo" style="justify-content:center">Not now</button></div></div>`;
+}
+let remindAsk = false;
 /* ================= INSTALL (home screen app) ================= */
 if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; render(); });
