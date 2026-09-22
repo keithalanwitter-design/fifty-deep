@@ -426,7 +426,8 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "1071802329438",
   appId: "1:1071802329438:web:8ee2e5b6d5630b07a087cf"
 };
-const FAMILY_PIN = "2026";
+const FAMILY_PIN = "2026";                       // only used by the reminder service's "send a test" check
+const FAMILY_PASSWORD = "witter2026";             // one family password: unlocks logging AND the Family Wall (capitals don't matter)
 const PUSH_API = "https://fifty-deep-push.keithalanwitter.workers.dev";
 const VAPID_PUBLIC = "BFBgHWO6MTFhPY6EU8taUiVwClpCN65sB_U4B3dYQeFTEi3TgAMMCrwhDhLtS9Thw0kmcoeWyMty_tT430GXnh8";                    // needed once per phone to log reps
 const SEASON_START = "2026-09-23";            // Wednesday: Day 1 (tip-off)
@@ -689,7 +690,7 @@ let me = LS.get("fd_me", null);
 let selDate = null;
 let sound = LS.get("fd_sound", true);
 let tab = LS.get("fd_tab", "today");
-let pinOK = LS.get("fd_pin", "") === FAMILY_PIN;
+let pinOK = ["2026", FAMILY_PASSWORD].includes(String(LS.get("fd_pin", "")).toLowerCase());   // phones unlocked with the old PIN stay unlocked
 let pinOpen = false;
 let pinThenAdd = false;
 let deferredInstall = null, installSheet = false, installAnimated = false;
@@ -900,14 +901,14 @@ function render(){
         <div class="rule"><h4>Comeback day</h4><p>Came up short on a weekday? The next day you get make-up sets (the green bubbles). Finish them on top of your normal 50 and the missed day counts as full again: streak saved, perfect week still alive, and the reps score.</p></div>
         <div class="rule"><h4>Underdog weekend</h4><p>Anyone in the bottom half of the leaderboard on weekday points going into the weekend scores 2x on Saturday and Sunday instead of 1.5x. Nobody gets smoked for long.</p></div>
         <div class="rule"><h4>Tiebreaker: first one done</h4><p>Tied on points? Whoever finished their full day first today ranks higher, then whoever reached that score first. Knock your sets out early and you jump everyone still waiting until tonight.</p></div>
-        <div class="rule"><h4>Family Wall check-ins</h4><p>Every Sunday (and on Day 30), post a photo, how you feel, and a few words about your week. It shows up on the Wall for the whole family, Arkansas and Illinois. The Wall needs the family password to open, and posts are scrambled so nobody outside the family can read them.</p></div>
+        <div class="rule"><h4>Family Wall check-ins</h4><p>Every Sunday (and on Day 30), post a photo, how you feel, and a few words about your week. It shows up on the Wall for the whole family, Arkansas and Illinois. The Wall opens with the same family password you use to log reps, and posts are scrambled so nobody outside the family can read them.</p></div>
         <div class="rule"><h4>Winning</h4><p>Most points Monday through Sunday wins the week (a tie at the top is a win for everyone tied). Weekly wins build the season record. Anyone can join mid-season from "+ Add player" and start stacking points that day. Honor system all the way. The real win is showing up every day.</p></div>
       </div>
     </section>` : ""}
     <p class="foot">Discipline is doing it when nobody's checking. Stronger, faster, quicker by tip-off.</p>
     ${canOfferInstall() ? `<p class="save"><button class="linkbtn" id="instLink">Install on this phone</button></p>` : ""}
     ${me && pushSupported() && !pushOn() && pushPerm() !== "denied" && LS.get("fd_push_hide", false) ? `<p class="save"><button class="linkbtn" id="pushUnhide">Turn on daily reminders</button></p>` : ""}
-    <p class="save">${shared ? "Scores sync live for the whole family." : "Connecting to the scoreboard…"}${pinOK ? "" : ` · <button class="linkbtn" id="pinOpenBtn" style="color:var(--mute)">Enter family PIN</button>`}</p>
+    <p class="save">${shared ? "Scores sync live for the whole family." : "Connecting to the scoreboard…"}${pinOK ? "" : ` · <button class="linkbtn" id="pinOpenBtn" style="color:var(--mute)">Enter family password</button>`}</p>
   </div>
   ${!me || picking || adding ? pickHtml() : ""}
   ${sheet ? sheetHtml() : ""}
@@ -917,10 +918,10 @@ function render(){
   ${installSheet ? installSheetHtml() : ""}
   ${ciSheet ? ciSheetHtml() : ""}
   ${remindAsk && me && !picking && !adding ? remindAskHtml() : ""}
-  ${pinOpen ? `<div class="pick" role="dialog" aria-modal="true" aria-label="Family PIN"><div class="box">
-    <div class="lbl">50 Deep</div><h2>Family PIN</h2>
-    <p class="readonly">Enter the 4-digit PIN once on this phone to start logging. Anyone can watch the scoreboard.</p>
-    <div class="pin"><input id="pinIn" type="password" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="PIN"></div>
+  ${pinOpen ? `<div class="pick" role="dialog" aria-modal="true" aria-label="Family password"><div class="box">
+    <div class="lbl">50 Deep</div><h2>Family password</h2>
+    <p class="readonly">Enter it once on this phone to log reps and open the Family Wall. Capitals don't matter. Anyone can watch the scoreboard.</p>
+    <div class="pin"><input id="pinIn" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Family password" placeholder="Password" style="width:100%;letter-spacing:.06em;font-size:24px"></div>
     <button class="btn go" id="pinGo" style="justify-content:center;font-size:18px;padding:14px">Unlock</button>
     <button class="btn no" id="pinX" style="justify-content:center">Just watching</button></div></div>` : ""}`;
   popAt = null; slamEx = null;
@@ -1278,7 +1279,9 @@ async function unlockWall(pw){
   if (!norm || await sha256hex("fifty-deep-wall:" + norm) !== WALL_CHECK) return false;
   const base = await crypto.subtle.importKey("raw", u8(norm), "PBKDF2", false, ["deriveKey"]);
   wallKey = await crypto.subtle.deriveKey({ name:"PBKDF2", salt:u8("fifty-deep-wall-v1"), iterations:150000, hash:"SHA-256" }, base, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]);
-  wallPw = norm; LS.set("fd_wall", norm); return true;
+  wallPw = norm; LS.set("fd_wall", norm);
+  if (!pinOK){ pinOK = true; LS.set("fd_pin", norm); }
+  return true;
 }
 async function sealEntry(obj){ const iv = crypto.getRandomValues(new Uint8Array(12)); const ct = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, wallKey, u8(JSON.stringify(obj))); return { iv: toB64(iv), ct: toB64(ct) }; }
 async function unsealEntry(e){ const pt = await crypto.subtle.decrypt({ name:"AES-GCM", iv: fromB64(e.iv) }, wallKey, fromB64(e.ct)); return JSON.parse(new TextDecoder().decode(pt)); }
@@ -1373,7 +1376,7 @@ function wallHtml(){
   const w = ciOpenWeek();
   const head = `<h2 class="sech">Family Wall</h2><p class="intro">Every Sunday, everyone posts a photo and a few words about their week. Arkansas and Illinois, one wall. Only people with the family password can see it.</p>`;
   if (!wallKey) return `<section class="rules">${head}
-    <div class="tcard"><label class="fl" for="wallPw">Family Wall password</label>
+    <div class="tcard"><label class="fl" for="wallPw">Family password</label>
       <div class="pin" style="justify-content:flex-start"><input id="wallPw" type="password" autocomplete="off" autocapitalize="none" placeholder="Password" style="width:100%;letter-spacing:.08em;font-size:22px;text-align:left"></div>
       <button class="btn go" id="wallGo" style="justify-content:center;padding:12px">Open the Wall</button></div></section>`;
   return `<section class="rules">${head}
@@ -1476,9 +1479,9 @@ app.addEventListener("click", ev => {
   if (t.dataset.tab){ tab = t.dataset.tab; LS.set("fd_tab", tab); openEntry = null; render(); return; }
   if (t.dataset.bview){ bview = t.dataset.bview; render(); return; }
   if (t.dataset.run){ if (!canWrite){ toast("View only."); return; } if (!pinOK){ pinOpen = true; render(); return; } openRunner(t.dataset.run); return; }
-  if (t.id === "pinGo"){ const v = (document.getElementById("pinIn").value || "").trim();
-    if (v === FAMILY_PIN){ pinOK = true; LS.set("fd_pin", v); pinOpen = false; if (pinThenAdd){ pinThenAdd = false; adding = true; newName = ""; newTeam = ""; newColor = null; } render(); toast("Unlocked. Go get your reps."); sfx("done"); }
-    else { toast("That PIN isn't right. Try again."); sfx("down"); } return; }
+  if (t.id === "pinGo"){ const v = (document.getElementById("pinIn").value || "").trim().toLowerCase();
+    if (v === FAMILY_PASSWORD){ pinOK = true; LS.set("fd_pin", v); unlockWall(v).then(() => { if (tab === "wall") render(); }); pinOpen = false; if (pinThenAdd){ pinThenAdd = false; adding = true; newName = ""; newTeam = ""; newColor = null; } render(); toast("Unlocked. Go get your reps."); sfx("done"); }
+    else { toast("That's not the family password. Try again."); sfx("down"); } return; }
   if (t.id === "pinX"){ pinOpen = false; pinThenAdd = false; render(); return; }
   if (t.dataset.me){ me = t.dataset.me; LS.set("fd_me", me); openEntry = null; picking = false;
     if (pushSupported() && pushPerm() === "default" && !LS.get("fd_asked", false) && !M.post) remindAsk = true;
@@ -1979,7 +1982,8 @@ function boot(){
   logs = LS.get("fd_logs", {});
   tests = LS.get("fd_tests", {});
   checkins = LS.get("fd_checkins", {});
-  if (wallPw) unlockWall(wallPw).then(ok => { if (ok && tab === "wall") render(); });
+  const savedPw = wallPw || (String(LS.get("fd_pin", "")).toLowerCase() === FAMILY_PASSWORD ? FAMILY_PASSWORD : "");
+  if (savedPw) unlockWall(savedPw).then(ok => { if (ok && tab === "wall") render(); });
   render();
   if (!window.firebase) { toast("Couldn't reach the scoreboard. Check your connection and refresh."); return; }
   try {
