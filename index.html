@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="50 Deep">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Ccircle cx='26' cy='26' r='24' fill='%23FF7A1A'/%3E%3Cg fill='none' stroke='%232a1200' stroke-width='2'%3E%3Cpath d='M2 26h48M26 2v48M9 9c8 8 8 26 0 34M43 9c-8 8-8 26 0 34'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>50 Deep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -233,6 +234,18 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 .seg{display:flex;background:var(--ground);border:1px solid var(--line);border-radius:999px;padding:2px}
 .seg button{padding:5px 10px;border-radius:999px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;color:var(--mute)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+/* install banner */
+.install{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:45;width:min(calc(100% - 24px),520px);display:flex;gap:12px;align-items:center;padding:12px 12px 12px 14px;border-radius:16px;background:var(--panel2);border:1px solid var(--orange);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.install.anim{animation:up .3s}
+.install img{width:44px;height:44px;border-radius:10px;flex:none}
+.install .it{flex:1;min-width:0}
+.install .it b{display:block;font-family:var(--display);font-weight:900;font-size:18px;text-transform:uppercase;line-height:1}
+.install .it span{font-size:13px;color:var(--mute)}
+.install .x{flex:none;width:30px;height:30px;border-radius:50%;color:var(--mute);font-size:18px}
+.iosteps{display:grid;gap:10px;margin:0;padding:0;list-style:none;text-align:left}
+.iosteps li{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:var(--panel2);font-size:16px}
+.iosteps li b{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#1a0d00;font-family:var(--display)}
+.iosteps svg{vertical-align:middle}
 /* tabs */
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
 .tabs button{padding:10px 2px;white-space:nowrap;border-radius:9px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:4px}
@@ -380,9 +393,11 @@ const HOT_BONUS = [100, 150, 200];           // flat bonus for 1st, 2nd, 3rd+ pe
 const TEST_EVERY = 30;                        // days between max-out tests
 const TEST_PTS = 5;                           // points per rep improved over your last test
 const TEST_EX = ["push","sit","squat"];
+// Keith's own Storm Basketball logo (used with permission of its owner).
+const STORM_LOGO = "data:image/webp;base64,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";
 // Team identities: colors, celebration effect, sound set, emblem and hype calls.
 const TEAMS = {
-  storm:    { team:"Storm",    hex:"#FF7A1A", soft:"#FFB36B", deep:"#1649B8", alt:"#2E7BFF", colors:["#FF7A1A","#2E7BFF","#FFB36B","#8DB6FF","#FFFFFF"], fx:"storm",   icon:"bolt",
+  storm:    { team:"Storm",    hex:"#F37021", soft:"#FFAA6E", deep:"#2E3192", alt:"#7C80F0", colors:["#F37021","#2E3192","#FFAA6E","#7C80F0","#FFFFFF"], fx:"storm",   icon:"img:storm",
               cheer:["Storm warning","Thunder!","Lightning strike","Here comes the Storm"], rank:"The Storm rolls in" },
   lancers:  { team:"Lancers",  hex:"#6CACE4", soft:"#B9DCF5", deep:"#0B2545", alt:"#FFFFFF", colors:["#6CACE4","#0B2545","#FFFFFF","#B9DCF5"], fx:"lancers", icon:"shield",
               cheer:["Charge!","Lancers attack","Shields up","For the Lancers"], rank:"The Lancers charge ahead" },
@@ -626,6 +641,14 @@ let tab = LS.get("fd_tab", "today");
 let pinOK = LS.get("fd_pin", "") === FAMILY_PIN;
 let pinOpen = false;
 let pinThenAdd = false;
+let deferredInstall = null, installSheet = false, installAnimated = false;
+const isStandalone = () => { try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; } catch { return false; } };
+const UA = navigator.userAgent || "";
+const isIOS = /iphone|ipad|ipod/i.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+const isAndroid = /android/i.test(UA);
+const inAppBrowser = /FBAN|FBAV|Instagram|Messenger|Line\/|Snapchat|TikTok/i.test(UA);
+const installSnoozed = () => { const t = LS.get("fd_install_snooze", 0); return t && Date.now() - t < 3 * 864e5; };
+const canOfferInstall = () => !isStandalone() && (deferredInstall || isIOS || isAndroid);
 let lastRank = null, lbMode = LS.get("fd_lb", "season");
 let picking = false, adding = false, newName = "", newTeam = "", newColor = null;
 let openEntry = null;         // exercise id with the "didn't get it" box open
@@ -819,10 +842,15 @@ function render(){
       </div>
     </section>` : ""}
     <p class="foot">Discipline is doing it when nobody's checking. Stronger, faster, quicker by tip-off.</p>
+    ${canOfferInstall() ? `<p class="save"><button class="linkbtn" id="instLink">Install on this phone</button></p>` : ""}
     <p class="save">${shared ? "Scores sync live for the whole family." : "Connecting to the scoreboard…"}${pinOK ? "" : ` · <button class="linkbtn" id="pinOpenBtn" style="color:var(--mute)">Enter family PIN</button>`}</p>
   </div>
   ${!me || picking || adding ? pickHtml() : ""}
   ${sheet ? sheetHtml() : ""}
+  ${me && !picking && !adding && !pinOpen && !installSheet && canOfferInstall() && !installSnoozed() ? `<div class="install ${installAnimated ? "" : "anim"}" role="region" aria-label="Install 50 Deep">
+    <img src="icon-192.png" alt=""><div class="it"><b>Add to home screen</b><span>One tap to log reps, like an app.</span></div>
+    <button class="btn go" id="instGo">Install</button><button class="x" id="instX" aria-label="Not now">✕</button></div>` : ""}
+  ${installSheet ? installSheetHtml() : ""}
   ${pinOpen ? `<div class="pick" role="dialog" aria-modal="true" aria-label="Family PIN"><div class="box">
     <div class="lbl">50 Deep</div><h2>Family PIN</h2>
     <p class="readonly">Enter the 4-digit PIN once on this phone to start logging. Anyone can watch the scoreboard.</p>
@@ -830,6 +858,7 @@ function render(){
     <button class="btn go" id="pinGo" style="justify-content:center;font-size:18px;padding:14px">Unlock</button>
     <button class="btn no" id="pinX" style="justify-content:center">Just watching</button></div></div>` : ""}`;
   popAt = null; slamEx = null;
+  if (document.querySelector(".install")) installAnimated = true;
 }
 
 function coachLine(){
@@ -919,6 +948,18 @@ function seasonBar(){
 function ballSvg(){
   return `<svg class="ball" viewBox="0 0 52 52" aria-hidden="true"><defs><radialGradient id="bg" cx="35%" cy="30%"><stop offset="0" stop-color="#FFB36B"/><stop offset=".6" stop-color="#FF7A1A"/><stop offset="1" stop-color="#B84A00"/></radialGradient></defs>
   <circle cx="26" cy="26" r="24" fill="url(#bg)"/><g fill="none" stroke="#2a1200" stroke-width="1.8"><path d="M2 26h48M26 2v48"/><path d="M9 9c8 8 8 26 0 34M43 9c-8 8-8 26 0 34"/></g></svg>`;
+}
+function installSheetHtml(){
+  const share = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v9h14v-9"/></svg>`;
+  const dots = `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>`;
+  let steps;
+  if (inAppBrowser) steps = `<li><b>1</b><span>This link opened inside another app. Tap the ${dots} or ${share} menu and choose <strong>Open in ${isIOS ? "Safari" : "Chrome"}</strong>.</span></li><li><b>2</b><span>Then tap <strong>Install</strong> again from there.</span></li>`;
+  else if (isIOS) steps = `<li><b>1</b><span>Tap the Share button ${share} at the bottom of Safari (top right on iPad).</span></li><li><b>2</b><span>Scroll down and tap <strong>Add to Home Screen</strong>.</span></li><li><b>3</b><span>Tap <strong>Add</strong>. The 50 Deep ball shows up on your home screen.</span></li>`;
+  else steps = `<li><b>1</b><span>Tap the ${dots} menu at the top right of Chrome.</span></li><li><b>2</b><span>Tap <strong>Add to Home screen</strong> or <strong>Install app</strong>.</span></li><li><b>3</b><span>Tap <strong>Install</strong>. The 50 Deep ball shows up with your apps.</span></li>`;
+  return `<div class="pick" role="dialog" aria-modal="true" aria-label="Install 50 Deep"><div class="box">
+    <img src="icon-192.png" alt="" style="width:72px;height:72px;border-radius:16px;margin:0 auto">
+    <h2>Add to home screen</h2><ol class="iosteps">${steps}</ol>
+    <button class="btn go" id="instDone" style="justify-content:center;font-size:18px;padding:14px">Got it</button></div></div>`;
 }
 function pickHtml(){
   const ids = PIDS();
@@ -1237,6 +1278,12 @@ app.addEventListener("click", ev => {
     else { toast("That PIN isn't right. Try again."); sfx("down"); } return; }
   if (t.id === "pinX"){ pinOpen = false; pinThenAdd = false; render(); return; }
   if (t.dataset.me){ me = t.dataset.me; LS.set("fd_me", me); openEntry = null; picking = false; render(); return; }
+  if (t.id === "instGo" || t.id === "instLink"){
+    if (deferredInstall){ const d = deferredInstall; deferredInstall = null; d.prompt(); d.userChoice.then(c => { if (c.outcome !== "accepted") LS.set("fd_install_snooze", Date.now()); render(); }).catch(() => {}); render(); }
+    else { installSheet = true; render(); }
+    return; }
+  if (t.id === "instX"){ LS.set("fd_install_snooze", Date.now()); render(); return; }
+  if (t.id === "instDone"){ installSheet = false; LS.set("fd_install_snooze", Date.now()); render(); return; }
   if (t.dataset.lb){ lbMode = t.dataset.lb; LS.set("fd_lb", lbMode); render(); return; }
   if (t.id === "whoBtn"){ picking = true; render(); return; }
   if (t.id === "pickX"){ picking = false; render(); return; }
@@ -1314,15 +1361,16 @@ const FX = {
     const drops = size === "big" ? 160 : size === "mid" ? 60 : 18;
     for (let i = 0; i < drops; i++){
       const x = size === "small" ? o.x + R(-50,50) : R(0, W()), y = size === "small" ? o.y + R(-60,-10) : R(-H()*.4, 0);
-      add({ kind:"drop", x, y, vx:-1.2, vy:R(9,15), g:.2, c:pick(["#2E7BFF","#8DB6FF","#FF7A1A","#FFFFFF"]), life: size === "small" ? 26 : 90 });
+      add({ kind:"drop", x, y, vx:-1.2, vy:R(9,15), g:.2, c:pick(["#7C80F0","#A9ACFF","#F37021","#FFFFFF"]), life: size === "small" ? 26 : 90 });
     }
     const bolts = size === "big" ? 3 : size === "mid" ? 1 : 0;
     for (let i = 0; i < bolts; i++) setTimeout(() => {
       const bx = size === "mid" ? o.x + R(-30,30) : R(W()*.15, W()*.85);
-      add({ kind:"bolt", x:bx, y:0, to: size === "mid" ? o.y : R(H()*.45, H()*.8), c: i % 2 ? "#2E7BFF" : "#FFB36B", life:16, seed:Math.random() });
-      flash(i % 2 ? "rgba(46,123,255,.55)" : "rgba(255,160,80,.5)", 220);
+      add({ kind:"bolt", x:bx, y:0, to: size === "mid" ? o.y : R(H()*.45, H()*.8), c: i % 2 ? "#7C80F0" : "#FFAA6E", life:16, seed:Math.random() });
+      flash(i % 2 ? "rgba(46,49,146,.6)" : "rgba(243,112,33,.5)", 220);
     }, i * 380);
     confetti(size === "small" ? 8 : 40, o, T.colors, 1, [2,6], .2, 60);
+    if (size === "big") setTimeout(() => { for (let i = 0; i < 90; i++) add({ kind:"swirl", cx:W()/2, base:H()*.8, h:Math.random(), height:H()*.45, ang:R(0,6.3), spin:R(.2,.3), top:120, drift:0, c:pick(["#2E3192","#4B4FC4","#F37021"]), w:R(3,6), life:R(60,100) }); }, 500);
   },
   lancers(size, o, T){
     const n = size === "big" ? 12 : size === "mid" ? 4 : 0;
@@ -1480,14 +1528,16 @@ function buzz(p){ try { navigator.vibrate && navigator.vibrate(p); } catch {} }
 
 /* emblems: simple original icons for each team */
 function emblem(icon, size = 28){
-  const s = size, paths = {
+  const s = size;
+  if (icon === "img:storm") return `<img src="${STORM_LOGO}" width="${s}" height="${s}" alt="" style="display:block;width:${s}px;height:${s}px;object-fit:contain">`;
+  const paths = {
     bolt:`<path d="M28 4 10 30h12l-4 18 20-28H26z" fill="currentColor"/>`,
     shield:`<path d="M24 3 42 9v14c0 11-8 18-18 22C14 41 6 34 6 23V9z" fill="currentColor"/><path d="M24 9 37 13v10c0 8-6 13-13 16-7-3-13-8-13-16V13z" fill="#0A0F1C" opacity=".35"/><path d="M24 38V15" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/><path d="M24 10l-5 8h10z" fill="#FFFFFF"/><path d="M17 22h14" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>`,
     plane:`<path d="M24 8 46 30 36 30 30 36 24 31 18 36 12 30 2 30z" fill="currentColor"/><path d="M24 8 30 24 24 22 18 24z" fill="#0A0F1C" opacity=".35"/>`,
     lance:`<path d="M8 44 36 16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M34 6l10 4-4 10z" fill="currentColor"/><path d="M14 30l8 8-10 2z" fill="currentColor" opacity=".7"/>`,
     bomb:`<circle cx="22" cy="30" r="14" fill="currentColor"/><path d="M31 18l5-5" stroke="currentColor" stroke-width="4"/><path d="M38 6l1 4 4 1-4 1-1 4-1-4-4-1 4-1z" fill="#FFD166"/>`,
     pad:`<rect x="4" y="16" width="40" height="20" rx="10" fill="currentColor"/><path d="M13 22v8M9 26h8" stroke="#0A0F1C" stroke-width="3"/><circle cx="32" cy="24" r="2.5" fill="#0A0F1C"/><circle cx="37" cy="29" r="2.5" fill="#0A0F1C"/>`,
-    twister:`<path d="M6 8h36M10 16h28M15 24h18M19 32h10M22 40h5" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>`,
+    twister:`<ellipse cx="24" cy="9" rx="19" ry="6" fill="none" stroke="currentColor" stroke-width="4"/><ellipse cx="24" cy="9" rx="7" ry="2.2" fill="currentColor"/><path d="M8 18c6 3 26 3 33-1M12 26c5 2 19 2 25-1M17 33c4 1 12 1 16-1M21 39c2 .6 6 .4 8-1M24 44c1 0 2-.5 3-1.5" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>`,
     paw:`<ellipse cx="24" cy="31" rx="10" ry="8" fill="currentColor"/><ellipse cx="12" cy="20" rx="4" ry="5" fill="currentColor"/><ellipse cx="20" cy="13" rx="4" ry="5" fill="currentColor"/><ellipse cx="28" cy="13" rx="4" ry="5" fill="currentColor"/><ellipse cx="36" cy="20" rx="4" ry="5" fill="currentColor"/>`,
     ball:`<circle cx="24" cy="24" r="19" fill="currentColor"/><path d="M5 24h38M24 5v38M11 11c6 6 6 20 0 26M37 11c-6 6-6 20 0 26" stroke="#0A0F1C" stroke-width="2" fill="none"/>`
   };
@@ -1575,6 +1625,11 @@ function sfx(kind, who){
     teamSound(kind === "rank" ? "full" : kind, who);
   } catch {}
 }
+
+/* ================= INSTALL (home screen app) ================= */
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; render(); });
+addEventListener("appinstalled", () => { deferredInstall = null; toast("50 Deep is on your home screen."); celebrate("mid"); render(); });
 
 /* ================= BOOT ================= */
 window.fiftyDeep = { celebrate: (s, w) => celebrate(s, null, w), hype: (b, sm, w) => hype(b, sm, w), sound: (k, w) => sfx(k, w) };
