@@ -48,11 +48,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 
 /* scoreboard */
 .board{position:relative;border-radius:18px;overflow:hidden;background:
-  radial-gradient(120% 90% at 0% 0%,rgba(46,123,255,.28),transparent 55%),
-  radial-gradient(120% 90% at 100% 0%,rgba(227,38,47,.26),transparent 55%),
+  radial-gradient(120% 60% at 0% 0%,rgba(46,123,255,.20),transparent 55%),
+  radial-gradient(120% 60% at 100% 0%,rgba(227,38,47,.18),transparent 55%),
   var(--panel);border:1px solid var(--line)}
-.board::before{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:2px solid rgba(255,255,255,.05);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.board::after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px solid rgba(255,255,255,.05);pointer-events:none}
+.board::before{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border:2px solid rgba(255,255,255,.05);border-radius:50%;pointer-events:none}
 .board-head{position:relative;display:flex;justify-content:center;padding-top:12px}
 .weektag{font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:13px;background:var(--orange);color:#1a0d00;padding:4px 12px;border-radius:4px}
 .sides{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;padding:10px 14px 16px;gap:6px}
@@ -95,8 +94,8 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 .dbtn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px 7px;border-radius:10px;background:var(--panel);border:1px solid var(--line);position:relative;min-width:0}
 .dbtn .dn{font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;color:var(--mute)}
 .dbtn .dd{font-family:var(--display);font-weight:800;font-size:22px;line-height:1}
-.dbtn .dots{display:flex;gap:4px}
-.dot{width:8px;height:8px;border-radius:50%;background:transparent;border:1.5px solid var(--dim)}
+.dbtn .dots{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;max-width:36px}
+.dot{width:7px;height:7px;border-radius:50%;background:transparent;border:1.5px solid var(--dim)}
 .dot.k.part{border-color:var(--storm)}.dot.k.full{background:var(--storm);border-color:var(--storm)}
 .dot.l.part{border-color:var(--bomb)}.dot.l.full{background:var(--bomb);border-color:var(--bomb)}
 .dbtn.wknd{background:linear-gradient(180deg,rgba(255,122,26,.13),var(--panel))}
@@ -155,8 +154,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
 .actions{display:flex;flex-wrap:wrap;gap:8px}
 .btn{font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:14px;padding:10px 14px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
-.btn.go{background:var(--storm);border-color:var(--storm);color:#fff}
-.me-logan .btn.go{background:var(--bomb);border-color:var(--bomb)}
+.btn.go{background:var(--me,var(--storm));border-color:var(--me,var(--storm));color:#fff}
 .btn.yes{border-color:rgba(255,122,26,.6);color:var(--orange-soft)}
 .btn.no{color:var(--mute)}
 .btn:disabled{opacity:.4;cursor:default}
@@ -168,6 +166,73 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 @keyframes slam{0%{transform:rotate(-6deg) scale(3);opacity:0}100%{transform:rotate(-6deg) scale(1);opacity:.9}}
 .readonly{font-size:14px;color:var(--mute)}
 
+/* leaderboard */
+.lbhead{position:relative;display:flex;justify-content:space-between;align-items:center;padding:12px 14px 4px;gap:10px}
+.lb{position:relative;list-style:none;margin:0;padding:4px 8px 8px;display:grid;gap:6px}
+.lbrow{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 10px 10px 6px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid transparent;border-left:4px solid var(--pc)}
+.lbrow.me{background:rgba(255,255,255,.06);border-color:var(--line);border-left-color:var(--pc)}
+.lbrow .rk{font-family:var(--display);font-weight:900;font-size:26px;text-align:center;color:var(--mute);line-height:1}
+.lbrow.lead .rk{color:#1a0d00;background:var(--orange);border-radius:50%;width:32px;height:32px;display:grid;place-items:center;font-size:20px}
+.lbmain{display:grid;gap:6px;min-width:0}
+.nm{font-family:var(--display);font-weight:900;font-size:24px;text-transform:uppercase;line-height:1;color:var(--pcs);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.nm small{font-family:var(--label);font-size:12px;letter-spacing:.12em;color:var(--mute);font-weight:600}
+.nm small.you{color:#1a0d00;background:var(--pcs);padding:0 5px;border-radius:3px;letter-spacing:.08em}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:240px}
+.mini i{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;display:block}
+.mini b{display:block;height:100%;background:var(--pc);border-radius:3px;transition:width .5s}
+.lbrow .chips{gap:4px}
+.lbrow .chip{font-size:11px;padding:2px 6px}
+.lbpts{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.lbpts .num{font-size:clamp(34px,9vw,46px);color:var(--white)}
+.lbrow.lead .lbpts .num{color:var(--orange-soft)}
+.lbpts small{font-family:var(--label);font-size:12px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+.lbfoot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 14px 12px;border-top:1px solid var(--line)}
+.lbfoot .linkbtn{margin:0;color:var(--orange-soft)}
+.asbtn{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:14px}
+.asbtn i{width:10px;height:10px;border-radius:50%}
+.pick .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.pbtn{padding:20px 8px;border-radius:16px;font-family:var(--display);font-weight:900;font-size:26px;text-transform:uppercase;color:#fff;line-height:1}
+.pbtn small{display:block;font-family:var(--label);font-size:12px;letter-spacing:.12em;font-weight:600;opacity:.85;margin-top:4px}
+.pbtn.add{background:transparent;border:2px dashed var(--dim);color:var(--ink);font-size:20px}
+.fl{font-family:var(--label);text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--mute);font-weight:600;margin-bottom:-6px}
+.fi{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);width:100%}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:40px;height:40px;border-radius:50%;border:3px solid transparent;color:#fff;font-weight:900;font-size:22px;line-height:1}
+.sw[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ground) inset}
+.bchip{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--mute)}
+.bchip[aria-pressed="true"]{background:var(--pc);border-color:var(--pc);color:#fff}
+.badge.pc .medal{background:radial-gradient(circle at 35% 30%,var(--pcs),var(--pc) 55%,var(--pcd));color:#fff;box-shadow:0 0 0 3px var(--panel),0 0 0 5px var(--pc)}
+.pdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+/* season bar, champion, pre-season */
+.season{display:grid;gap:8px;padding:12px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.sb-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sb-top .num{font-size:40px;color:var(--orange-soft)}
+.track{position:relative;height:8px;border-radius:4px;background:rgba(255,255,255,.07);overflow:visible}
+.track i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--storm),var(--orange))}
+.track .tick{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px;background:var(--dim);transform:translateX(-50%)}
+.track .tick.on{background:var(--ink)}
+.cue{margin:0;font-size:16px;font-weight:600;color:#DDE3F0;text-wrap:pretty}
+.season.pre .num{font-size:56px}
+.champ{display:flex;gap:14px;align-items:center;padding:16px;border-radius:16px;background:radial-gradient(120% 140% at 0% 0%,var(--pc),var(--pcd));color:#fff}
+.champ h2{margin:0;font-family:var(--display);font-weight:900;font-size:44px;text-transform:uppercase;line-height:.9}
+.champ p{margin:4px 0 0;font-weight:600}
+.champ .lbl{color:rgba(255,255,255,.85)}
+.precard{display:grid;gap:12px;padding:18px;border-radius:16px;background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--pc) 30%,transparent),transparent 60%),var(--panel);border:1px solid var(--line)}
+.precard h2{margin:0;font-family:var(--display);font-weight:900;font-size:34px;text-transform:uppercase;line-height:.95}
+.precard p{margin:0;color:#C9D1E3;max-width:62ch}
+.prestep{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:var(--panel2)}
+.prestep b{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--pc);color:#fff;font-family:var(--display);font-size:18px}
+.prestep.ok b{background:var(--good);color:#032012}
+.prestep span{flex:1 1 180px}
+.coach .emb.big{flex:none;width:52px;height:52px;display:grid;place-items:center;border-radius:50%;background:var(--panel);border:1px solid var(--line)}
+.nm .emb{display:inline-flex;align-self:center}
+.lbpts small.gap{color:var(--dim);text-transform:none;letter-spacing:0;font-family:var(--body);font-size:12px}
+.lbrow.fullday{box-shadow:0 0 0 1px color-mix(in srgb,var(--pc) 50%,transparent) inset}
+.lbrow{border-left-color:var(--pc);background-image:linear-gradient(90deg,color-mix(in srgb,var(--pc) 12%,transparent),transparent 40%)}
+.chip.done{background:var(--pc);border-color:transparent;color:#fff}
+.seg{display:flex;background:var(--ground);border:1px solid var(--line);border-radius:999px;padding:2px}
+.seg button{padding:5px 10px;border-radius:999px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:12px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
 /* tabs */
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
 .tabs button{padding:10px 2px;white-space:nowrap;border-radius:9px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:4px}
@@ -261,7 +326,20 @@ details.rules summary span{font-family:var(--label);font-size:13px;color:var(--m
 .hype{position:fixed;inset:0;z-index:55;display:grid;place-items:center;pointer-events:none}
 .hype .in{text-align:center;animation:hype 2.4s cubic-bezier(.2,1.2,.3,1) forwards;padding:16px}
 .hype .big{font-family:var(--display);font-weight:900;font-size:clamp(64px,20vw,130px);line-height:.85;text-transform:uppercase;color:#fff;
-  text-shadow:0 0 0 #000,4px 4px 0 var(--orange),8px 8px 0 var(--storm-deep),0 0 40px rgba(255,122,26,.6)}
+  text-shadow:0 0 0 #000,4px 4px 0 var(--h1,var(--orange)),8px 8px 0 var(--h2,var(--storm-deep)),0 0 40px var(--h1,rgba(255,122,26,.6))}
+.hype .emb{display:flex;justify-content:center;color:var(--h1);margin-bottom:6px;filter:drop-shadow(0 0 14px var(--h1))}
+.hype .small{color:var(--h3,var(--orange-soft))!important}
+.hype.fx-lancers .small,.hype.fx-lions .small{color:#fff!important}
+.hype.fx-gamers .big{font-family:"Courier New",monospace;letter-spacing:-.02em;text-shadow:4px 4px 0 var(--h2),0 0 30px var(--h1)}
+.hype.fx-gamers .in{animation-timing-function:steps(8)}
+.hype.fx-cyclones .in{animation-name:hypespin}
+@keyframes hypespin{0%{transform:scale(.2) rotate(-540deg);opacity:0}25%{transform:scale(1.05) rotate(8deg);opacity:1}35%{transform:scale(1) rotate(0)}80%{opacity:1}100%{opacity:0}}
+.hype.fx-bombers .in{animation-name:hypeboom}
+@keyframes hypeboom{0%{transform:scale(3);opacity:0}12%{transform:scale(.9);opacity:1}20%{transform:scale(1.05)}28%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.flash{position:fixed;inset:0;z-index:57;pointer-events:none;animation:flash linear forwards}
+@keyframes flash{0%{opacity:1}100%{opacity:0}}
+body.shake .wrap{animation:shake .42s}
+@keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-2px)}}
 .hype .small{font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:18px;color:var(--orange-soft);margin-top:10px}
 @keyframes hype{0%{transform:scale(.3) rotate(-8deg);opacity:0}15%{transform:scale(1.08) rotate(2deg);opacity:1}25%{transform:scale(1) rotate(0)}80%{opacity:1}100%{opacity:0;transform:scale(1.05)}}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--ground);font-weight:600;padding:10px 16px;border-radius:999px;z-index:58;font-size:15px;animation:up .25s;max-width:calc(100% - 32px);text-align:center}
@@ -294,15 +372,56 @@ const FIREBASE_CONFIG = {
   appId: "1:1071802329438:web:8ee2e5b6d5630b07a087cf"
 };
 const FAMILY_PIN = "2026";                    // needed once per phone to log reps
-const SEASON_START = "2026-09-21";            // Monday, Week 1
+const SEASON_START = "2026-09-23";            // Wednesday: Day 1 (tip-off)
+const SEASON_DAYS = 30;
+const SEASON_END = "2026-10-22";              // Thursday: Day 30 (championship day)
+const WEEK0 = "2026-09-21";                   // Monday of the tip-off week; weeks run Mon–Sun
 const HOT_BONUS = [100, 150, 200];           // flat bonus for 1st, 2nd, 3rd+ perfect week in a row
 const TEST_EVERY = 30;                        // days between max-out tests
 const TEST_PTS = 5;                           // points per rep improved over your last test
 const TEST_EX = ["push","sit","squat"];
-const P = {
-  keith: { id:"keith", name:"Keith", team:"Storm", side:"l" },
-  logan: { id:"logan", name:"Logan", team:"Bombers", side:"r" }
+// Team identities: colors, celebration effect, sound set, emblem and hype calls.
+const TEAMS = {
+  storm:    { team:"Storm",    hex:"#FF7A1A", soft:"#FFB36B", deep:"#1649B8", alt:"#2E7BFF", colors:["#FF7A1A","#2E7BFF","#FFB36B","#8DB6FF","#FFFFFF"], fx:"storm",   icon:"bolt",
+              cheer:["Storm warning","Thunder!","Lightning strike","Here comes the Storm"], rank:"The Storm rolls in" },
+  lancers:  { team:"Lancers",  hex:"#6CACE4", soft:"#B9DCF5", deep:"#0B2545", alt:"#FFFFFF", colors:["#6CACE4","#0B2545","#FFFFFF","#B9DCF5"], fx:"lancers", icon:"shield",
+              cheer:["Charge!","Lancers attack","Shields up","For the Lancers"], rank:"The Lancers charge ahead" },
+  bombers:  { team:"Bombers",  hex:"#E3262F", soft:"#FF8A8F", deep:"#111111", alt:"#111111", colors:["#E3262F","#111111","#8A8F98","#FFFFFF","#3A3A3A"], fx:"bombers", icon:"plane",
+              cheer:["Bombs away!","Direct hit","Boom!","Bombers drop in"], rank:"Bomb dropped on the leaderboard" },
+  gamers:   { team:"Gamers",   hex:"#22C55E", soft:"#86EFAC", deep:"#065F2A", alt:"#0B3D1F", colors:["#22C55E","#86EFAC","#0B3D1F","#FFFFFF","#A3E635"], fx:"gamers",  icon:"pad",
+              cheer:["Level up!","+XP","Combo!","High score"], rank:"New high score" },
+  cyclones: { team:"Cyclones", hex:"#D7263D", soft:"#F58A97", deep:"#0A0A0A", alt:"#9CA3AF", colors:["#D7263D","#0A0A0A","#F58A97","#9CA3AF","#FFFFFF"], fx:"cyclones",icon:"twister",
+              cheer:["Cyclone!","Twister!","Full spin","Touchdown"], rank:"The Cyclone tears through" },
+  cycblue:  { team:"Cyclones", hex:"#2F7DF6", soft:"#9CC3FF", deep:"#0B1F4D", alt:"#FFFFFF", colors:["#2F7DF6","#0B1F4D","#9CC3FF","#FFFFFF","#5FA8FF"], fx:"cyclones",icon:"twister",
+              cheer:["Cyclone!","Twister!","Full spin","Blue storm"], rank:"The Cyclone tears through" },
+  lions:    { team:"Lions",    hex:"#3B6CF6", soft:"#A9C0FF", deep:"#102A83", alt:"#FFFFFF", colors:["#3B6CF6","#102A83","#FFFFFF","#A9C0FF","#F5C542"], fx:"lions",   icon:"paw",
+              cheer:["Roar!","King of the court","Pride up","Hear 'em roar"], rank:"The Lions take the throne" }
 };
+// Colors for anyone added later from the page (plain team-color confetti).
+const PALETTE = {
+  orange: { hex:"#FF7A1A", soft:"#FFB36B", deep:"#B84A00", label:"Ball orange" },
+  green:  { hex:"#22B864", soft:"#7BE3A6", deep:"#0F6B38", label:"Green" },
+  purple: { hex:"#8B5CF6", soft:"#C4B0FF", deep:"#4C2A9E", label:"Purple" },
+  gold:   { hex:"#E9B308", soft:"#F7DC7A", deep:"#8A6A00", label:"Gold" },
+  teal:   { hex:"#14B8C4", soft:"#86E4EA", deep:"#0B6C74", label:"Teal" },
+  pink:   { hex:"#EC4899", soft:"#F9A8D4", deep:"#9D174D", label:"Pink" }
+};
+const MAX_PLAYERS = 12;
+// Founding players. Everyone else is added from the page and stored in the "players" collection.
+const P = {
+  keith:   { id:"keith",   name:"Keith",   team:"Storm",    color:"storm",    order:0, joined:SEASON_START },
+  madison: { id:"madison", name:"Madison", team:"Lancers",  color:"lancers",  order:1, joined:SEASON_START },
+  logan:   { id:"logan",   name:"Logan",   team:"Bombers",  color:"bombers",  order:2, joined:SEASON_START },
+  scott:   { id:"scott",   name:"Scott",   team:"Gamers",   color:"gamers",   order:3, joined:SEASON_START },
+  ezra:    { id:"ezra",    name:"Ezra",    team:"Cyclones", color:"cyclones", order:4, joined:SEASON_START },
+  judah:   { id:"judah",   name:"Judah",   team:"Lions",    color:"lions",    order:5, joined:SEASON_START },
+  nora:    { id:"nora",    name:"Nora",    team:"Cyclones", color:"cycblue",  order:6, joined:SEASON_START }
+};
+const FOUNDERS = new Set(Object.keys(P));
+const PIDS = () => Object.values(P).sort((a,b) => (a.order - b.order) || a.name.localeCompare(b.name)).map(x => x.id);
+const styleOf = color => TEAMS[color] || (PALETTE[color] ? { ...PALETTE[color], alt:PALETTE[color].deep, colors:[PALETTE[color].hex, PALETTE[color].soft, "#FFFFFF"], fx:"confetti", icon:"ball", cheer:["Let's go!","Bucket!","That's work"], rank:"Climbing the board" } : null);
+const pc = id => styleOf((P[id] && P[id].color) || "orange") || styleOf("orange");
+const slug = n => n.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 24);
 const EX = [
   { id:"push", name:"Push-ups", per:10, target:50, pts:1, unit:"reps", short:"Push",
     musc:"Chest · shoulders · triceps",
@@ -353,8 +472,10 @@ const todayStr = () => iso(new Date());
 const dow = s => parse(s).getDay();                 // 0 Sun … 6 Sat
 const isWknd = s => { const w = dow(s); return w === 0 || w === 6; };
 const daysBetween = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
-const weekIdx = s => Math.floor(daysBetween(SEASON_START, s) / 7);
-const weekStart = w => addDays(SEASON_START, w*7);
+const weekIdx = s => Math.max(0, Math.floor(daysBetween(WEEK0, s) / 7));
+const weekStart = w => addDays(WEEK0, w*7);
+const inSeason = d => d >= SEASON_START && d <= SEASON_END;
+const dayNum = d => daysBetween(SEASON_START, d) + 1;           // 1..30
 const DN = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const DNL = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
@@ -365,7 +486,7 @@ const LS = {
 };
 let logs = {};                        // "keith|2026-09-21" -> {push,sit,squat,rope}
 let tests = {};                       // "keith|1" -> {push,sit,squat,date}
-let testsCol = null;
+let testsCol = null, playersCol = null;
 let local = {};                       // optimistic overrides waiting to save
 let db = null, dbCol = null, shared = false, canWrite = true;
 const pending = {};                   // debounce timers per key
@@ -402,27 +523,29 @@ async function flush(p, d){
 const full = v => EX.every(e => v[e.id] >= e.target);
 function compute(){
   const today = todayStr();
-  const last = today < SEASON_START ? SEASON_START : today;
+  const last = today < SEASON_START ? SEASON_START : (today > SEASON_END ? SEASON_END : today);
   const dates = []; for (let d = SEASON_START; d <= last; d = addDays(d,1)) dates.push(d);
   const M = { today, dates, players:{}, weeks:[] };
   const nWeeks = weekIdx(last) + 1;
+  M.pre = today < SEASON_START; M.post = today > SEASON_END;
 
-  for (const p of ["keith","logan"]){
-    const days = {};
+  for (const p of PIDS()){
+    const days = {}, joined = (P[p] && P[p].joined) || SEASON_START;
     for (const d of dates){
       const v = vals(p, d), wk = isWknd(d), prev = addDays(d,-1);
       const need = { push:0, sit:0, squat:0, rope:0 };
-      if (prev >= SEASON_START && !isWknd(prev)){
+      if (prev >= SEASON_START && prev >= joined && !isWknd(prev)){
         const pv = vals(p, prev);
         if (!full(pv)) EX.forEach(e => need[e.id] = Math.max(0, e.target - pv[e.id]));
       }
       const cap = {}; EX.forEach(e => cap[e.id] = wk ? Infinity : e.target + need[e.id]);
-      days[d] = { d, v, wk, need, cap, full: full(v), comeback: EXID.some(id => need[id] > 0) };
+      days[d] = { d, v, wk, need, cap, full: full(v), comeback: EXID.some(id => need[id] > 0), pts: 0, mult: wk ? 1.5 : 1, wkMult: wk ? 1.5 : 1 };
     }
     for (const d of dates){
       const x = days[d], nx = days[addDays(d,1)];
       x.recovered = !x.wk && !x.full && !!nx && EX.every(e => nx.v[e.id] >= e.target + nx.need[e.id]);
-      x.ok = x.full || x.recovered;
+      x.pre = d < joined;                 // before this player joined: never counts against them
+      x.ok = x.full || x.recovered || x.pre;
       x.base = EX.reduce((s,e) => s + Math.min(x.v[e.id], x.cap[e.id]) * e.pts, 0);
       x.sets = EX.map(e => Math.floor(Math.min(x.v[e.id], e.target) / e.per));
       x.rounds = Math.min(...x.sets);
@@ -432,7 +555,8 @@ function compute(){
     const yest = addDays(today,-1);
     for (const d of dates){
       const x = days[d];
-      if (x.wk){ if (x.full) s++; }
+      if (x.pre) {}
+      else if (x.wk){ if (x.full) s++; }
       else if (x.ok) s++;
       else if (d === today) {}
       else if (d === yest && today >= SEASON_START) { onLine = true; }
@@ -443,7 +567,7 @@ function compute(){
   }
 
   // tests: improvement bonus lands in the week the retest is logged
-  for (const p of ["keith","logan"]){
+  for (const p of PIDS()){
     const pl = M.players[p]; pl.tests = testList(p);
     pl.tests.forEach((t,i) => { t.gain = 0; if (i > 0){ const pr = pl.tests[i-1];
       t.gain = TEST_EX.reduce((s,id) => s + Math.max(0, (t[id]||0) - (pr[id]||0)), 0) * TEST_PTS; } });
@@ -451,39 +575,46 @@ function compute(){
   // weeks: hot streak bonus, points, underdog weekends
   for (let w = 0; w < nWeeks; w++){
     const wd = []; for (let i = 0; i < 7; i++) wd.push(addDays(weekStart(w), i));
-    const inSeason = wd.filter(d => d <= last);
-    for (const p of ["keith","logan"]){
+    const inWeek = wd.filter(d => inSeason(d) && d <= last && d <= today);
+    for (const p of PIDS()){
       const pl = M.players[p];
-      const weekdays = wd.slice(0,5);
+      const weekdays = wd.slice(0,5).filter(inSeason);           // tip-off week and final week are short
+      pl.needCount = pl.needCount || []; pl.needCount[w] = weekdays.length;
       pl.okCount[w] = weekdays.filter(d => pl.days[d] && pl.days[d].ok).length;
-      pl.perfect[w] = pl.okCount[w] === 5;
+      pl.perfect[w] = weekdays.length > 0 && pl.okCount[w] === weekdays.length;
       pl.chain[w] = pl.perfect[w] ? (w ? pl.chain[w-1] : 0) + 1 : 0;
       pl.bonus[w] = pl.perfect[w] ? HOT_BONUS[Math.min(pl.chain[w], 3) - 1] : 0;
       pl.weekdayPts[w] = weekdays.filter(d => pl.days[d]).reduce((s,d) => s + pl.days[d].base, 0);
     }
-    const K = M.players.keith, L = M.players.logan;
-    const dog = K.weekdayPts[w] < L.weekdayPts[w] ? "keith" : L.weekdayPts[w] < K.weekdayPts[w] ? "logan" : null;
-    for (const p of ["keith","logan"]){
+    // underdogs: anyone below the middle of the pack on weekday points gets 2x on the weekend
+    const ids = PIDS(), vals0 = ids.map(p => M.players[p].weekdayPts[w]).sort((a,b) => a-b);
+    const mid = vals0.length ? (vals0[Math.floor((vals0.length-1)/2)] + vals0[Math.ceil((vals0.length-1)/2)]) / 2 : 0;
+    const dogs = new Set(ids.length > 1 ? ids.filter(p => M.players[p].weekdayPts[w] < mid) : []);
+    for (const p of PIDS()){
       const pl = M.players[p]; let tot = 0;
-      for (const d of inSeason){
+      for (const d of inWeek){
         const x = pl.days[d];
-        const wm = x.wk ? (dog === p ? 2 : 1.5) : 1;
+        const wm = x.wk ? (dogs.has(p) ? 2 : 1.5) : 1;
         x.mult = wm; x.wkMult = wm;
         x.pts = Math.round(x.base * x.mult);
         tot += x.pts;
       }
-      pl.testBonus[w] = pl.tests.filter(t => t.date && weekIdx(t.date) === w).reduce((s,t) => s + t.gain, 0);
+      pl.testBonus[w] = pl.tests.filter(t => t.date && weekIdx(t.date > SEASON_END ? SEASON_END : t.date) === w).reduce((s,t) => s + t.gain, 0);
       pl.weekPts[w] = tot + pl.bonus[w] + pl.testBonus[w];
     }
-    M.weeks.push({ w, dates:wd, dog, complete: addDays(weekStart(w),6) < today });
+    M.weeks.push({ w, dates:wd, dogs, complete: addDays(weekStart(w),6) < today || (M.post && w === nWeeks-1) });
   }
   // season record from completed weeks
-  const rec = { keith:0, logan:0, tie:0 };
+  // season record: weekly wins (a tie at the top counts as a win for each)
+  const rec = {}; PIDS().forEach(p => rec[p] = 0);
   M.weeks.filter(x => x.complete).forEach(x => {
-    const a = M.players.keith.weekPts[x.w], b = M.players.logan.weekPts[x.w];
-    if (a > b) rec.keith++; else if (b > a) rec.logan++; else rec.tie++;
+    const top = Math.max(...PIDS().map(p => M.players[p].weekPts[x.w]));
+    if (top > 0) PIDS().forEach(p => { if (M.players[p].weekPts[x.w] === top) rec[p]++; });
+    x.winners = PIDS().filter(p => top > 0 && M.players[p].weekPts[x.w] === top);
   });
   M.rec = rec;
+  PIDS().forEach(p => { const pl = M.players[p]; pl.seasonPts = pl.weekPts.reduce((a,b) => a + b, 0);
+    pl.fullDays = Object.values(pl.days).filter(x => !x.pre && x.full && x.d <= today).length; });
   return M;
 }
 
@@ -494,6 +625,9 @@ let sound = LS.get("fd_sound", true);
 let tab = LS.get("fd_tab", "today");
 let pinOK = LS.get("fd_pin", "") === FAMILY_PIN;
 let pinOpen = false;
+let pinThenAdd = false;
+let lastRank = null, lbMode = LS.get("fd_lb", "season");
+let picking = false, adding = false, newName = "", newTeam = "", newColor = null;
 let openEntry = null;         // exercise id with the "didn't get it" box open
 let sheet = null;             // {ex}
 let popAt = null;             // {ex, i}
@@ -501,7 +635,7 @@ let slamEx = null;
 let M = null;
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
-const other = p => p === "keith" ? "logan" : "keith";
+const leaderOf = (w, exclude) => PIDS().filter(p => p !== exclude).sort((a,b) => M.players[b].weekPts[w] - M.players[a].weekPts[w])[0];
 const fmt = n => Math.round(n).toLocaleString();
 
 /* ================= RENDER ================= */
@@ -511,37 +645,64 @@ function render(){
   const today = M.today;
   if (!selDate || selDate > M.dates[M.dates.length-1]) selDate = today < SEASON_START ? SEASON_START : today;
   const w = weekIdx(selDate), wk = M.weeks[w];
-  const K = M.players.keith, L = M.players.logan;
-  document.body.className = me ? "me-"+me : "";
+  const ids = PIDS();
+  if (me && !P[me]) me = null;
+  document.body.className = me ? "has-me" : "";
+  if (me){ const c = pc(me); document.body.style.setProperty("--me", c.hex); document.body.style.setProperty("--me-deep", c.deep); document.body.style.setProperty("--me-soft", c.soft); }
 
-  const heatChip = (pl) => pl.perfect[w] ? `<span class="chip heat">Hot streak +${pl.bonus[w]}</span>` : `<span class="chip">Hot ${pl.okCount[w]}/5</span>`;
-  const streakChip = (pl) => `<span class="chip streak">${pl.streak} day streak${pl.onLine ? " · on the line" : ""}</span>`;
+  const heatChip = (pl) => pl.perfect[w] ? `<span class="chip heat">Hot streak +${pl.bonus[w]}</span>` : `<span class="chip">Hot ${pl.okCount[w]}/${pl.needCount[w] || 5}</span>`;
+  const streakChip = (pl) => pl.streak ? `<span class="chip streak">${pl.streak}-day streak${pl.onLine ? " · on the line" : ""}</span>` : (pl.onLine ? `<span class="chip streak">Streak on the line</span>` : "");
   const wkndReached = wk.dates[5] <= today;
-  const dogChip = (p) => wk.dog === p && wkndReached ? `<span class="chip dog">Underdog 2x wknd</span>` : "";
-  const kp = K.weekPts[w], lp = L.weekPts[w];
+  const dogChip = (p) => wk.dogs.has(p) && wkndReached ? `<span class="chip dog">Underdog 2x</span>` : "";
 
-  const bars = EX.map(e => {
-    const kv = K.days[selDate].v[e.id], lv = L.days[selDate].v[e.id];
-    const mx = Math.max(e.target, kv, lv);
-    return `<div class="row">
-      <div class="bar l"><i style="width:${Math.min(100, kv/mx*100)}%"></i></div>
-      <div class="mid"><b>${kv} · ${lv}</b>${e.short}${e.unit==="min"?" min":""}</div>
-      <div class="bar r"><i style="width:${Math.min(100, lv/mx*100)}%"></i></div></div>`;
+  // leaderboard: season points (default) or this week's points
+  const ptsOf = p => lbMode === "week" ? M.players[p].weekPts[w] : M.players[p].seasonPts;
+  const order = ids.slice().sort((a,b) => (ptsOf(b) - ptsOf(a)) || (M.players[b].days[selDate].pts - M.players[a].days[selDate].pts) || (P[a].order - P[b].order));
+  let rank = 0, lastPts = null;
+  const lbRows = order.map((p, i) => {
+    const pl = M.players[p], x = pl.days[selDate], c = pc(p), pts = ptsOf(p);
+    if (pts !== lastPts){ rank = i + 1; lastPts = pts; }
+    const above = i > 0 ? order[i-1] : null, below = order[i+1];
+    const gapTxt = !above ? (below && pts > 0 ? `leads by ${fmt(pts - ptsOf(below))}` : "") : (ptsOf(above) > pts ? `${fmt(ptsOf(above) - pts)} back of ${esc(P[above].name)}` : `tied with ${esc(P[above].name)}`);
+    const mini = EX.map(e => { const pct = Math.min(100, x.v[e.id] / e.target * 100);
+      return `<i title="${e.name}: ${x.v[e.id]}${e.unit==="min" ? " min" : ""}"><b style="width:${pct}%"></b></i>`; }).join("");
+    return `<li class="lbrow ${p === me ? "me" : ""} ${rank === 1 && pts > 0 ? "lead" : ""} ${x.full ? "fullday" : ""}" style="--pc:${c.hex};--pcs:${c.soft};--pcd:${c.deep};--pca:${c.alt}">
+      <span class="rk">${rank}</span>
+      <div class="lbmain">
+        <div class="nm"><span class="emb" style="color:${c.hex}">${emblem(c.icon, 22)}</span>${esc(P[p].name)}${P[p].team ? `<small>${esc(P[p].team)}</small>` : ""}${p === me ? `<small class="you">you</small>` : ""}</div>
+        <div class="mini" aria-label="${selDate === today ? "Today" : DNL[dow(selDate)]}: ${EX.map(e => e.short + " " + x.v[e.id]).join(", ")}">${mini}</div>
+        <div class="chips">${M.pre ? `<span class="chip">Ready for tip-off</span>` : heatChip(pl) + streakChip(pl) + dogChip(p)}${x.full ? `<span class="chip done">Full day</span>` : ""}${M.rec[p] ? `<span class="chip">${M.rec[p]} wk win${M.rec[p] > 1 ? "s" : ""}</span>` : ""}</div>
+      </div>
+      <div class="lbpts"><span class="num">${fmt(pts)}</span>${M.pre ? "" : `<small>${selDate === today ? "today" : DN[dow(selDate)]} +${fmt(x.pts)}</small>`}${gapTxt && !M.pre ? `<small class="gap">${gapTxt}</small>` : ""}</div>
+    </li>`;
   }).join("");
+  const champ = M.post ? order[0] : null;
 
   const strip = wk.dates.map(d => {
     const disabled = d > today || d < SEASON_START;
-    const dot = (p, cls) => { const x = M.players[p].days[d]; if (!x) return `<i class="dot ${cls}"></i>`;
-      return `<i class="dot ${cls} ${x.full || x.recovered ? "full" : x.base > 0 ? "part" : ""}"></i>`; };
+    const dot = p => { const x = M.players[p].days[d], c = pc(p).hex;
+      const st = !x ? "" : x.full || x.recovered ? `background:${c};border-color:${c}` : x.base > 0 ? `border-color:${c}` : "";
+      return `<i class="dot" style="${st}"></i>`; };
     return `<button class="dbtn ${isWknd(d) ? "wknd" : ""} ${d===selDate ? "sel" : ""}" data-day="${d}" ${d===today ? 'aria-current="date"' : ""} ${disabled ? "disabled" : ""} aria-label="${DNL[dow(d)]} ${d}">
       ${isWknd(d) ? `<span class="x15">1.5x</span>` : ""}
       <span class="dn">${DN[dow(d)]}</span><span class="dd">${parse(d).getDate()}</span>
-      <span class="dots">${dot("keith","k")}${dot("logan","l")}</span></button>`;
+      <span class="dots">${ids.map(dot).join("")}</span></button>`;
   }).join("");
 
   // ---- my day
   let dayHtml = "";
-  if (me){
+  if (me && M.pre){
+    const c = pc(me), t1 = tests[me+"|1"] || {}, done1 = TEST_EX.every(id => t1[id] > 0);
+    dayHtml = `<section class="precard" style="--pc:${c.hex};--pcd:${c.deep}">
+      <span class="emb" style="color:${c.hex}">${emblem(c.icon, 56)}</span>
+      <div class="lbl">${esc(P[me].team || "")} · Pre-season</div>
+      <h2>Tip-off ${fmtDate(SEASON_START)}</h2>
+      <p>Starting Wednesday, every day is 50 push-ups, 50 sit-ups, 50 squats and 5 minutes of rope, in sets of 10. Weekends are uncapped and score 1.5x. The season runs 30 days and ends ${fmtDate(SEASON_END)}.</p>
+      <div class="prestep ${done1 ? "ok" : ""}"><b>${done1 ? "✓" : "1"}</b><span>${done1 ? "Baseline test done. That's your number to beat on Day 30." : "Do your baseline max-out test: 1 minute each of push-ups, sit-ups and squats."}</span>${done1 ? "" : `<button class="btn go" data-tab="tests">Start test →</button>`}</div>
+      <div class="prestep"><b>2</b><span>Add the site to your home screen so it's one tap away.</span></div>
+      <div class="prestep"><b>3</b><span>Tell the family: ${PIDS().length} players, one leaderboard.</span></div>
+    </section>`;
+  } else if (me){
     const pl = M.players[me], x = pl.days[selDate];
     const isToday = selDate === today;
     const edit = canWrite;
@@ -600,7 +761,7 @@ function render(){
     dayHtml = `
       ${banners.join("")}
       <div class="dayhead">
-        <div><div class="lbl">${me === "keith" ? "Keith's" : "Logan's"} log · ${x.wk ? "Bonus day" : "Weekday"}</div>
+        <div><div class="lbl">${esc(P[me].name)}'s log · ${x.wk ? "Bonus day" : "Weekday"}</div>
         <h2>${isToday ? "Today" : DNL[dow(selDate)]} <span>${parse(selDate).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span></h2></div>
         <div style="text-align:right"><div class="lbl">Day points</div><div class="daypts num">${fmt(x.pts)}</div></div>
       </div>
@@ -611,41 +772,32 @@ function render(){
 
   app.innerHTML = `<div class="wrap">
     <header class="top">
-      <div class="brand"><h1>50 <b>Deep</b></h1><small>Keith vs Logan · Road to Tip-Off</small></div>
+      <div class="brand"><h1>50 <b>Deep</b></h1><small>Family Leaderboard · Road to Tip-Off</small></div>
       <div style="display:flex;gap:8px;align-items:center">
-        <div class="who" role="group" aria-label="Who's logging">
-          <button class="k" data-me="keith" aria-pressed="${me==="keith"}">Keith</button>
-          <button class="l" data-me="logan" aria-pressed="${me==="logan"}">Logan</button></div>
+        <button class="asbtn" id="whoBtn" aria-label="Change who's logging">${me ? `<i style="background:${pc(me).hex}"></i><span>${esc(P[me].name)}</span>` : "<span>Pick player</span>"}<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
         <button class="iconbtn" id="snd" aria-label="Sound ${sound ? "on" : "off"}" title="Sound">${sound
           ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>`
           : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>`}</button>
       </div>
     </header>
 
-    <section class="board" aria-label="Scoreboard">
-      <div class="board-head"><span class="weektag">Week ${w+1}${wk.complete ? " · Final" : ""}</span></div>
-      <div class="sides">
-        <div class="side l"><div class="pname">Keith</div><div class="team">Storm</div>
-          <div class="score num ${kp > lp ? "lead" : ""}">${fmt(kp)}</div>
-          <div class="chips">${heatChip(K)}${streakChip(K)}${dogChip("keith")}</div></div>
-        <div class="vs"><span class="v">VS</span><span class="rec">Season<br>${M.rec.keith}–${M.rec.logan}${M.rec.tie ? "–"+M.rec.tie : ""}</span></div>
-        <div class="side r"><div class="pname">Logan</div><div class="team">Bombers</div>
-          <div class="score num ${lp > kp ? "lead" : ""}">${fmt(lp)}</div>
-          <div class="chips">${heatChip(L)}${streakChip(L)}${dogChip("logan")}</div></div>
-      </div>
-      <div class="h2h">
-        <div class="h2h-cap"><span class="lbl">Keith ${fmt(K.days[selDate].pts)}</span><span class="lbl">${selDate === today ? "Today" : DN[dow(selDate)]} head-to-head</span><span class="lbl">${fmt(L.days[selDate].pts)} Logan</span></div>
-        ${bars}
-      </div>
+    ${champ ? `<section class="champ" style="--pc:${pc(champ).hex};--pcd:${pc(champ).deep}"><span class="emb">${emblem(pc(champ).icon, 44)}</span><div><div class="lbl">50 Deep champion</div><h2>${esc(P[champ].name)}</h2><p>${fmt(M.players[champ].seasonPts)} points · ${M.players[champ].fullDays} full days · ${esc(P[champ].team || "")}</p></div></section>` : ""}
+    <section class="board" aria-label="Leaderboard">
+      <div class="lbhead"><span class="weektag">${M.pre ? "Pre-season" : M.post ? "Final standings" : `Day ${dayNum(today)} of ${SEASON_DAYS}`}</span>
+        <div class="seg" role="group" aria-label="Leaderboard view"><button data-lb="season" aria-pressed="${lbMode !== "week"}">Season</button><button data-lb="week" aria-pressed="${lbMode === "week"}">Week ${w+1}</button></div></div>
+      <ol class="lb">${lbRows}</ol>
+      <div class="lbfoot"><span class="lbl">Bars: ${EX.map(e => e.short).join(" · ")} (${selDate === today ? "today" : DNL[dow(selDate)]})</span>
+        ${ids.length < MAX_PLAYERS ? `<button class="linkbtn" id="addBtn">+ Add player</button>` : ""}</div>
     </section>
 
+    ${seasonBar()}
     ${me ? coachLine() : ""}
 
     <nav class="tabs" role="tablist" aria-label="Sections">
-      ${[["today","Today"],["tests","Max-Out"],["badges","Badges"],["rules","Rules"]].map(([id,l]) => `<button role="tab" data-tab="${id}" aria-selected="${tab===id}">${l}${id==="badges" ? ` <span class="tc">${badgeCount(me||"keith")}</span>` : ""}${id==="tests" && testDue() ? ` <span class="tc due">!</span>` : ""}</button>`).join("")}
+      ${[["today","Today"],["tests","Max-Out"],["badges","Badges"],["rules","Rules"]].map(([id,l]) => `<button role="tab" data-tab="${id}" aria-selected="${tab===id}">${l}${id==="badges" ? ` <span class="tc">${badgeCount(me||PIDS()[0])}</span>` : ""}${id==="tests" && testDue() ? ` <span class="tc due">!</span>` : ""}</button>`).join("")}
     </nav>
 
-    ${tab === "today" ? `${me && testDue() ? `<div class="banner test"><span class="tag">1:00</span><div><b>${testDue() === 1 ? "Baseline test first" : `Test ${testDue()} is open`}</b>${testDue() === 1 ? "Before the grind starts, find out where you stand: 1 minute of max push-ups, sit-ups and squats." : "30 days of work. Time to see how much stronger you got."} <button class="linkbtn" data-tab="tests">Go to Max-Out →</button></div></div>` : ""}
+    ${tab === "today" ? `${me && testDue() && !M.pre ? `<div class="banner test"><span class="tag">1:00</span><div><b>${testDue() === 1 ? "Baseline test first" : `Test ${testDue()} is open`}</b>${testDue() === 1 ? "Before the grind starts, find out where you stand: 1 minute of max push-ups, sit-ups and squats." : "30 days of work. Time to see how much stronger you got."} <button class="linkbtn" data-tab="tests">Go to Max-Out →</button></div></div>` : ""}
     <nav class="strip" aria-label="Days this week">${strip}</nav>
     ${dayHtml}` : ""}
     ${tab === "tests" ? testsHtml() : ""}
@@ -653,21 +805,23 @@ function render(){
     ${tab === "rules" ? `    <section class="rules">
       <h2 class="sech">Game rules</h2>
       <div class="rulebody">
+        <div class="rule"><h4>The season</h4><p>30 days, from ${fmtDate(SEASON_START)} to ${fmtDate(SEASON_END)}. Everyone's points add up across the whole season, and the most points on Day 30 wins it all. The leaderboard's Week view shows who is winning the current week.</p></div>
+        <div class="rule"><h4>Your team</h4><p>Every player reps a team: Storm, Lancers, Bombers, Gamers, Cyclones and Lions. Finish a set, finish an exercise, finish a full day, or climb the leaderboard, and your team's colors and sounds take over the screen.</p></div>
         <div class="rule"><h4>The daily 50</h4><p>Monday through Friday: 50 push-ups, 50 sit-ups, 50 squats and 5 minutes of jump rope. Sets of 10, five rounds spread through the day. Once you go past 10 your form breaks, so don't. Each rep is 1 point and each minute of rope is 10, so a full weekday is worth 200 points before multipliers. Weekday reps are capped at 50 each.</p></div>
         <div class="rule"><h4>Bonus weekends</h4><p>Saturday and Sunday have no cap. Every rep scores 1.5x, so 10 push-ups is 15 points. This is where weeks get won.</p></div>
         <div class="rule"><h4>Streak</h4><p>Hit all four goals on a weekday and your streak grows. Weekends are bonus: a full weekend day adds to the streak, a skipped one never breaks it.</p></div>
         <div class="rule"><h4>Hot streak bonus</h4><p>Go a perfect week (all 5 weekdays full, make-ups count) and you bank a flat bonus on that week's score. Stack perfect weeks back to back and the bonus grows. Miss one and it starts over at +100. It's a flat bonus, not a multiplier, so one rough week never leaves anybody out of reach.</p>
           <div class="ladder">${HOT_BONUS.map((h,i) => `<span class="chip heat">${["1st","2nd","3rd+"][i]} week +${h}</span>`).join("")}</div></div>
-        <div class="rule"><h4>Max-out tests</h4><p>Every 30 days: 1 minute of max push-ups, sit-ups and squats, with good form only. The first one sets your baseline. Every retest pays ${TEST_PTS} points for each rep you beat your last test by, added to that week. This is where you see the work paying off.</p></div>
+        <div class="rule"><h4>Max-out tests</h4><p>Two tests: a baseline before tip-off and a final on Day 30. One minute of max push-ups, sit-ups and squats each, good form only. The final pays ${TEST_PTS} points for every rep you beat your baseline by. This is where you see the work paying off.</p></div>
         <div class="rule"><h4>Comeback day</h4><p>Came up short on a weekday? The next day you get make-up sets (the green bubbles). Finish them on top of your normal 50 and the missed day counts as full again: streak saved, perfect week still alive, and the reps score.</p></div>
-        <div class="rule"><h4>Underdog weekend</h4><p>Whoever is behind on weekday points going into the weekend scores 2x on Saturday and Sunday instead of 1.5x. Nobody gets smoked for long.</p></div>
-        <div class="rule"><h4>Winning</h4><p>Most points Monday through Sunday wins the week. Weekly wins build the season record. Honor system all the way. The real win is showing up every day.</p></div>
+        <div class="rule"><h4>Underdog weekend</h4><p>Anyone in the bottom half of the leaderboard on weekday points going into the weekend scores 2x on Saturday and Sunday instead of 1.5x. Nobody gets smoked for long.</p></div>
+        <div class="rule"><h4>Winning</h4><p>Most points Monday through Sunday wins the week (a tie at the top is a win for everyone tied). Weekly wins build the season record. Anyone can join mid-season from "+ Add player" and start stacking points that day. Honor system all the way. The real win is showing up every day.</p></div>
       </div>
     </section>` : ""}
     <p class="foot">Discipline is doing it when nobody's checking. Stronger, faster, quicker by tip-off.</p>
-    <p class="save">${shared ? "Scores sync live between Keith and Logan." : "Connecting to the scoreboard…"}${pinOK ? "" : ` · <button class="linkbtn" id="pinOpenBtn" style="color:var(--mute)">Enter family PIN</button>`}</p>
+    <p class="save">${shared ? "Scores sync live for the whole family." : "Connecting to the scoreboard…"}${pinOK ? "" : ` · <button class="linkbtn" id="pinOpenBtn" style="color:var(--mute)">Enter family PIN</button>`}</p>
   </div>
-  ${!me ? pickHtml() : ""}
+  ${!me || picking || adding ? pickHtml() : ""}
   ${sheet ? sheetHtml() : ""}
   ${pinOpen ? `<div class="pick" role="dialog" aria-modal="true" aria-label="Family PIN"><div class="box">
     <div class="lbl">50 Deep</div><h2>Family PIN</h2>
@@ -679,34 +833,115 @@ function render(){
 }
 
 function coachLine(){
-  const pl = M.players[me], opp = M.players[other(me)], x = pl.days[M.today];
-  const name = P[me].name, oppName = P[other(me)].name;
-  if (!x) return "";
+  const pl = M.players[me], name = P[me].name, today = M.today;
+  const r = rankOf(me), ahead = PIDS().filter(q => M.players[q].seasonPts > pl.seasonPts).sort((a,b) => M.players[a].seasonPts - M.players[b].seasonPts)[0];
+  const gap = ahead ? M.players[ahead].seasonPts - pl.seasonPts : 0;
+  const second = PIDS().filter(q => q !== me).sort((a,b) => M.players[b].seasonPts - M.players[a].seasonPts)[0];
+  const lead = second ? pl.seasonPts - M.players[second].seasonPts : 0;
+  const race = ahead ? `You're #${r}, ${fmt(gap)} back of ${P[ahead].name}. ${Math.ceil(gap / 10)} set${Math.ceil(gap/10) === 1 ? "" : "s"} closes it.`
+                     : pl.seasonPts > 0 ? (lead > 0 ? `You're #1 by ${fmt(lead)}. Don't give them air.` : `You're tied for #1. Break the tie.`) : "";
   const hr = new Date().getHours();
   const greet = hr < 12 ? `Hey ${name}, ready to take on the day?` : hr < 17 ? `Afternoon, ${name}. Let's keep it moving.` : `Evening, ${name}. Still time to finish strong.`;
   let main, sub;
-  if (!x.wk){
-    const next = EX.map((e,i) => ({ e, left: (e.target + x.need[e.id]) - x.v[e.id] })).filter(o => o.left > 0).sort((a,b) => b.left - a.left)[0];
-    if (!next){ main = `<b>Full day banked.</b> That's ${pl.streak} in a row.`; sub = opp.days[M.today].full ? `${oppName} got his too. Nobody blinked today.` : `${oppName} hasn't finished yet. Your move's done.`; }
-    else if (x.rounds === 0 && x.base === 0){ main = `${greet}`; sub = `Round 1 of 5: 10 push-ups, 10 sit-ups, 10 squats, 1 minute of rope. Go.`; }
-    else { main = `${name}, you're <b>${x.rounds} of 5 rounds</b> in.`;
-      sub = `Next challenge: ${next.e.unit === "min" ? `jump rope, ${next.left} min left` : `${next.e.name.toLowerCase()}, ${next.left} to go`}. ${opp.days[M.today].base > x.base ? `${oppName} is ahead today.` : ""}`; }
+  if (M.pre){
+    const n = daysBetween(today, SEASON_START);
+    main = `${name}, tip-off is <b>${n === 1 ? "tomorrow" : "in " + n + " days"}</b>.`;
+    sub = testDue() === 1 ? `Get your baseline max-out test in before Wednesday. That's the number you'll beat on Day 30.` : `Baseline is locked in. Rest up. Wednesday it's 50 of everything.`;
+  } else if (M.post){
+    main = `<b>30 days. You showed up.</b>`;
+    sub = `Finished #${r} with ${fmt(pl.seasonPts)} points and ${pl.fullDays} full days. ${testDue() ? "Log your Day 30 final test on the Max-Out tab." : "That discipline goes with you into the season."}`;
   } else {
-    main = x.base === 0 ? `${greet} <b>No cap today.</b>` : `<b>${fmt(x.pts)} bonus points</b> so far.`;
-    sub = `Weekend reps are worth ${x.wkMult}x. How many are you doing?`;
+    const x = pl.days[today];
+    if (!x.wk){
+      const next = EX.map(e => ({ e, left: (e.target + x.need[e.id]) - x.v[e.id] })).filter(o => o.left > 0).sort((a,b) => b.left - a.left)[0];
+      if (!next){ main = `<b>Full day banked.</b> ${pl.streak}-day streak.`; sub = race || "Now go live your day."; }
+      else if (x.base === 0){ main = greet; sub = `Round 1 of 5: 10 push-ups, 10 sit-ups, 10 squats, 1 minute of rope. ${race}`; }
+      else { main = `${name}, you're <b>${x.rounds} of 5 rounds</b> in.`;
+        sub = `Next: ${next.e.unit === "min" ? `jump rope, ${next.left} min left` : `${next.e.name.toLowerCase()}, ${next.left} to go`}. ${race}`; }
+    } else {
+      main = x.base === 0 ? `${greet} <b>No cap today.</b>` : `<b>${fmt(x.pts)} bonus points</b> so far.`;
+      sub = `Weekend reps are worth ${x.wkMult}x. This is where you make a move. ${race}`;
+    }
+    if (pl.onLine) sub = `Streak on the line: finish yesterday's make-up sets today to save it.`;
   }
-  if (pl.onLine) sub = `Streak on the line: finish yesterday's make-up sets today to save it.`;
-  return `<section class="coach">${ballSvg()}<p>${main}<span class="sub">${sub}</span></p></section>`;
+  const c = pc(me);
+  return `<section class="coach"><span class="emb big" style="color:${c.hex}">${emblem(c.icon, 46)}</span><p>${main}<span class="sub">${sub}</span></p></section>`;
+}
+
+/* ---- season bar: countdown, milestones, daily cue ---- */
+const MILESTONES = { 1:"Tip-off", 7:"One week in", 10:"Double digits", 15:"Halftime", 21:"Three weeks: this is a habit now", 25:"Final stretch", 28:"Three days left", 30:"Championship day" };
+const CUES = [
+  "Day 1. Nobody's a champion yet. Everybody starts at zero.",
+  "The first week decides if it's a habit or a phase.",
+  "Sets of 10. Perfect form. Five times today. That's the whole plan.",
+  "Tired is a feeling. Done is a decision.",
+  "Somebody on this board is doing their sets right now.",
+  "Weekend points count 1.5x. Champions are made on Saturday.",
+  "One week down. The people who quit already did.",
+  "Your future self is watching this leaderboard.",
+  "Don't count the reps. Make the reps count.",
+  "Double digits. This is where streaks turn into pride.",
+  "Strong legs win the fourth quarter.",
+  "The rope doesn't care how you feel. Five minutes.",
+  "Nobody remembers the easy days.",
+  "Nearly halfway. Look how far you've come.",
+  "Halftime. The second half is where winners are decided.",
+  "Behind? Two big weekend days change everything.",
+  "Ahead? Somebody is coming for you.",
+  "Discipline is doing it when nobody's checking.",
+  "Your core is your balance in the air. Earn it.",
+  "Consistency beats intensity. Every single day.",
+  "Three weeks. You don't have a habit. You ARE the habit.",
+  "Push-ups today are rebounds in December.",
+  "Squats today are a quicker first step at tip-off.",
+  "The board can change in one weekend. Be the one who changes it.",
+  "Final stretch. Five days left. Empty the tank.",
+  "Every rep from here is a statement.",
+  "Somebody's streak is about to break. Don't let it be yours.",
+  "Three days left. Leave nothing for later.",
+  "Tomorrow is championship day. Rest smart, finish strong.",
+  "Championship day. Do your 50s, then beat your baseline."
+];
+function seasonBar(){
+  const today = todayStr();
+  if (M.pre){
+    const n = daysBetween(today, SEASON_START);
+    return `<section class="season pre"><div class="sb-top"><span class="lbl">Tip-off</span><b class="num">${n}</b><span class="lbl">${n === 1 ? "day" : "days"} · ${fmtDate(SEASON_START)}</span></div>
+      <p class="cue">30 days. 50 of everything. ${PIDS().length} players. Only one name at the top. Get your baseline test done before tip-off.</p></section>`;
+  }
+  const dn = Math.min(SEASON_DAYS, dayNum(today)), left = SEASON_DAYS - dn;
+  const ms = Object.keys(MILESTONES).map(Number);
+  const cur = MILESTONES[dn];
+  return `<section class="season"><div class="sb-top"><span class="lbl">Day</span><b class="num">${dn}</b><span class="lbl">of ${SEASON_DAYS} · ${M.post ? "season complete" : left === 0 ? "final day" : left + " to go"}</span>${cur ? `<span class="chip heat">${cur}</span>` : ""}</div>
+    <div class="track" aria-hidden="true"><i style="width:${dn / SEASON_DAYS * 100}%"></i>${ms.map(m => `<span class="tick ${m <= dn ? "on" : ""}" style="left:${(m - .5) / SEASON_DAYS * 100}%"></span>`).join("")}</div>
+    <p class="cue">${esc(CUES[dn - 1] || CUES[0])}</p></section>`;
 }
 function ballSvg(){
   return `<svg class="ball" viewBox="0 0 52 52" aria-hidden="true"><defs><radialGradient id="bg" cx="35%" cy="30%"><stop offset="0" stop-color="#FFB36B"/><stop offset=".6" stop-color="#FF7A1A"/><stop offset="1" stop-color="#B84A00"/></radialGradient></defs>
   <circle cx="26" cy="26" r="24" fill="url(#bg)"/><g fill="none" stroke="#2a1200" stroke-width="1.8"><path d="M2 26h48M26 2v48"/><path d="M9 9c8 8 8 26 0 34M43 9c-8 8-8 26 0 34"/></g></svg>`;
 }
 function pickHtml(){
+  const ids = PIDS();
+  if (adding){
+    const used = new Set(ids.map(id => P[id].color));
+    const free = Object.keys(PALETTE).filter(k => !used.has(k));
+    if (!newColor || (used.has(newColor) && free.length)) newColor = free[0] || "orange";
+    return `<div class="pick" role="dialog" aria-modal="true" aria-label="Add player"><div class="box" style="text-align:left">
+      <div class="lbl">50 Deep · New player</div><h2 style="text-align:left">Add to the family</h2>
+      <label class="fl" for="npName">Name</label><input class="fi" id="npName" maxlength="20" autocomplete="off" placeholder="First name" value="${esc(newName)}">
+      <label class="fl" for="npTeam">Team or school <span style="color:var(--dim)">(optional)</span></label><input class="fi" id="npTeam" maxlength="24" autocomplete="off" placeholder="e.g. Bombers" value="${esc(newTeam)}">
+      <div class="fl">Color</div>
+      <div class="swatches">${Object.entries(PALETTE).map(([k,c]) => `<button class="sw" data-color="${k}" aria-pressed="${newColor===k}" aria-label="${c.label}${used.has(k) ? " (taken)" : ""}" style="background:${c.hex}">${used.has(k) ? "·" : ""}</button>`).join("")}</div>
+      <button class="btn go" id="npSave" style="justify-content:center;font-size:18px;padding:14px">Add player</button>
+      <button class="btn no" id="npCancel" style="justify-content:center">Cancel</button></div></div>`;
+  }
   return `<div class="pick" role="dialog" aria-modal="true" aria-label="Choose player"><div class="box">
     <div class="lbl">50 Deep · Road to Tip-Off</div><h2>Who's grinding?</h2>
-    <div class="two"><button class="k" data-me="keith">Keith<small>Storm</small></button><button class="l" data-me="logan">Logan<small>Bombers</small></button></div>
-    <p class="readonly">You can switch anytime from the top of the page.</p></div></div>`;
+    <div class="grid">${ids.map(id => { const c = pc(id);
+      return `<button class="pbtn" data-me="${id}" style="background:linear-gradient(160deg,${c.hex},${c.deep})">${esc(P[id].name)}<small>${esc(P[id].team || "Family")}</small></button>`; }).join("")}
+      ${ids.length < MAX_PLAYERS ? `<button class="pbtn add" id="addBtn2">+ Add player<small>New to the family</small></button>` : ""}</div>
+    <p class="readonly">This phone remembers who you pick. You can switch anytime from the top of the page.</p>
+    ${me ? `<button class="btn no" id="pickX" style="justify-content:center">Close</button>` : ""}</div></div>`;
 }
 let timer = null;
 function sheetHtml(){
@@ -728,9 +963,10 @@ function sheetHtml(){
 
 
 /* ================= MAX-OUT TESTS ================= */
-const openTestK = () => Math.max(1, Math.floor(daysBetween(SEASON_START, todayStr()) / TEST_EVERY) + 1);
-const testOpens = k => addDays(SEASON_START, TEST_EVERY * (k-1));
-const testLabel = k => k === 1 ? "Baseline" : `Day ${TEST_EVERY*(k-1)} retest`;
+// Two tests: a baseline before or at tip-off, and a final max-out on Day 30.
+const openTestK = () => todayStr() >= SEASON_END ? 2 : 1;
+const testOpens = k => k === 1 ? SEASON_START : SEASON_END;
+const testLabel = k => k === 1 ? "Baseline" : "Day 30 final";
 function testList(p){
   const out = [];
   for (let k = 1; k <= openTestK(); k++){ const t = tests[p+"|"+k]; if (t && TEST_EX.some(id => t[id] > 0)) out.push({ k, ...t }); }
@@ -753,31 +989,30 @@ function testsHtml(){
   const K = openTestK(), today = M.today;
   const mine = me ? (tests[me+"|"+K] || {}) : {};
   const prevMine = me && K > 1 ? (tests[me+"|"+(K-1)] || {}) : null;
-  const nextOpen = testOpens(K+1), inDays = daysBetween(today, nextOpen);
   let h = `<section class="tcard" style="background:transparent;border:0;padding:0">
     <h2 class="sech">Max-Out Tests</h2>
-    <p class="intro">One minute each, all-out, good form only. Bad-form reps don't count, and the honor system says so. Rest 2–3 minutes between exercises. The first test is your baseline, then you retest every ${TEST_EVERY} days to see how much stronger you got. Every retest pays ${TEST_PTS} points for each rep you beat your last test by.</p></section>`;
+    <p class="intro">One minute each, all-out, good form only. Bad-form reps don't count, and the honor system says so. Rest 2–3 minutes between exercises. The first test is your baseline, then you retest on Day 30 to see how much stronger 30 days made you. The final pays ${TEST_PTS} points for each rep you beat your last test by.</p></section>`;
   if (me){
     h += `<section class="tcard open"><div class="thead"><h3>${P[me].name}: Test ${K}</h3><span class="lbl">${testLabel(K)} · open now</span></div>
       ${TEST_EX.map(id => { const e = EX.find(z => z.id === id), v = mine[id] || 0, pv = prevMine ? prevMine[id] || 0 : 0;
         return `<div class="trow"><div><div class="tn">${e.name}</div>${v && prevMine && pv ? `<span class="up ${v < pv ? "dn" : ""}">${v >= pv ? "+" : ""}${v - pv} vs last test</span>` : prevMine && pv ? `<span class="locked">Last test: ${pv}</span>` : ""}</div>
           <div class="tv ${v ? "" : "none"}">${v || "—"}</div>
           <button class="btn ${v ? "" : "go"}" data-run="${id}">${v ? "Redo" : "Run 1:00"}</button></div>`; }).join("")}
-      <div class="locked">Test ${K+1} (${testLabel(K+1)}) opens ${parse(nextOpen).toLocaleDateString(undefined,{month:"short",day:"numeric"})}, in ${inDays} day${inDays === 1 ? "" : "s"}.</div>
+      ${K === 1 ? `<div class="locked">The Day 30 final opens ${parse(SEASON_END).toLocaleDateString(undefined,{month:"short",day:"numeric"})}, in ${daysBetween(today, SEASON_END)} day${daysBetween(today, SEASON_END) === 1 ? "" : "s"}. Beat your baseline for bonus points.</div>` : `<div class="locked">This is it. Leave everything on the floor.</div>`}
     </section>`;
   }
   for (let k = K; k >= 1; k--){
-    const tk = tests["keith|"+k] || {}, tl = tests["logan|"+k] || {};
-    const bk = tests["keith|1"] || {}, bl = tests["logan|1"] || {};
-    const cell = (t, b, id, cls) => { const v = t[id] || 0; if (!v) return `<td class="${cls}"><span class="locked">—</span></td>`;
-      const d = k > 1 && b[id] ? v - b[id] : null;
-      return `<td class="${cls}"><b>${v}</b>${d != null ? `<span class="up ${d < 0 ? "dn" : ""}">${d >= 0 ? "+" : ""}${d} vs base</span>` : ""}</td>`; };
-    const gk = M.players.keith.tests.find(t => t.k === k), gl = M.players.logan.tests.find(t => t.k === k);
+    const rows = PIDS().map(id => {
+      const t = tests[id+"|"+k] || {}, b = tests[id+"|1"] || {}, g = M.players[id].tests.find(z => z.k === k);
+      const cell = ex => { const v = t[ex] || 0; if (!v) return `<td><span class="locked">—</span></td>`;
+        const d = k > 1 && b[ex] ? v - b[ex] : null;
+        return `<td><b>${v}</b>${d != null ? `<span class="up ${d < 0 ? "dn" : ""}">${d >= 0 ? "+" : ""}${d}</span>` : ""}</td>`; };
+      return `<tr><td><span class="pdot" style="background:${pc(id).hex}"></span>${esc(P[id].name)}</td>${TEST_EX.map(cell).join("")}${k > 1 ? `<td>${g ? "+"+g.gain : "—"}</td>` : ""}</tr>`;
+    }).join("");
     h += `<section class="tcard"><div class="thead"><h3>Test ${k}</h3><span class="lbl">${testLabel(k)} · ${parse(testOpens(k)).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span></div>
-      <div style="overflow-x:auto"><table class="cmp"><thead><tr><th scope="col">1 minute</th><th scope="col">Keith</th><th scope="col">Logan</th></tr></thead><tbody>
-      ${TEST_EX.map(id => `<tr><td>${EX.find(z => z.id === id).name}</td>${cell(tk,bk,id,"k")}${cell(tl,bl,id,"l")}</tr>`).join("")}
-      ${k > 1 ? `<tr><td>Bonus pts</td><td class="k">${gk ? "+"+gk.gain : "—"}</td><td class="l">${gl ? "+"+gl.gain : "—"}</td></tr>` : ""}
-      </tbody></table></div></section>`;
+      <div style="overflow-x:auto"><table class="cmp"><thead><tr><th scope="col">1 minute</th><th scope="col">Push</th><th scope="col">Sit</th><th scope="col">Squat</th>${k > 1 ? `<th scope="col">Bonus</th>` : ""}</tr></thead><tbody>
+      ${rows}
+      </tbody></table></div>${k > 1 ? `<div class="locked">Green numbers are reps gained over each person's baseline.</div>` : ""}</section>`;
   }
   return h;
 }
@@ -856,7 +1091,7 @@ function badgeList(p){
   const pl = M.players[p], ds = Object.values(pl.days);
   const tot = { push:0, sit:0, squat:0, rope:0 }; ds.forEach(x => EX.forEach(e => tot[e.id] += x.v[e.id]));
   const maxChain = Math.max(0, ...pl.chain);
-  const weekWins = M.weeks.filter(wk => wk.complete && pl.weekPts[wk.w] > M.players[other(p)].weekPts[wk.w]).length;
+  const weekWins = M.rec[p] || 0;
   const base = pl.tests.find(t => t.k === 1);
   const baseDone = !!base && TEST_EX.every(id => base[id] > 0);
   const lvl = !!base && pl.tests.some(t => t.k > 1 && TEST_EX.every(id => (t[id]||0) > (base[id]||0)));
@@ -883,26 +1118,65 @@ function badgeList(p){
 }
 const earnedIds = p => p && M ? new Set(badgeList(p).filter(b => b.earned).map(b => b.id)) : new Set();
 const badgeCount = p => badgeList(p).filter(b => b.earned).length;
-function announceBadges(before){
+function announceBadges(before, delay = 0){
   if (!me) return;
   const fresh = badgeList(me).filter(b => b.earned && !before.has(b.id));
-  fresh.forEach((b,i) => setTimeout(() => { hype("Badge", `${b.name} unlocked`); celebrate("mid"); sfx("done"); }, 2600 + i*2600));
+  fresh.forEach((b,i) => setTimeout(() => { hype("Badge", `${b.name} unlocked`); celebrate("mid"); sfx("done"); }, Math.max(2600, delay) + i*2600));
 }
 function badgesHtml(){
-  const v = bview || me || "keith", list = badgeList(v), n = list.length;
-  const cls = v === "keith" ? "storm" : "bomb";
+  const v = (bview && P[bview]) ? bview : (me || PIDS()[0]), list = badgeList(v), n = list.length, c = pc(v);
   return `<section class="rules"><h2 class="sech">Badges</h2>
-    <div class="bsum who" role="group" aria-label="Whose badges" style="align-self:flex-start">
-      <button class="k" data-bview="keith" aria-pressed="${v==="keith"}">Keith ${badgeCount("keith")}/${n}</button>
-      <button class="l" data-bview="logan" aria-pressed="${v==="logan"}">Logan ${badgeCount("logan")}/${n}</button></div>
-    <div class="bgrid">${list.map((b,i) => `<div class="badge ${b.earned ? (i % 3 === 1 ? cls : "") : "off"}"><div class="medal" aria-hidden="true">${b.code}</div>
+    <div class="bsum" role="group" aria-label="Whose badges">${PIDS().map(id => `<button class="bchip" data-bview="${id}" aria-pressed="${v===id}" style="--pc:${pc(id).hex}">${esc(P[id].name)} ${badgeCount(id)}/${n}</button>`).join("")}</div>
+    <div class="bgrid">${list.map((b,i) => `<div class="badge ${b.earned ? (i % 3 === 1 ? "pc" : "") : "off"}" style="--pc:${c.hex};--pcs:${c.soft};--pcd:${c.deep}"><div class="medal" aria-hidden="true">${b.code}</div>
       <div class="bn">${b.name}</div><div class="bd">${b.desc}</div></div>`).join("")}</div></section>`;
+}
+
+/* ================= LIVE NEWS: other people's moves ================= */
+let booted = false;
+function liveNews(had){
+  if (M.pre || M.post) return;
+  const news = [];
+  PIDS().forEach(p => { if (p !== me && !had.full.has(p) && M.players[p].days[M.today] && M.players[p].days[M.today].full) news.push(`${P[p].name} just banked a full day. ${pick(["Your move.","Clock's ticking.","Answer back.","Keep up."])}`); });
+  if (me && had.r){
+    const r = rankOf(me);
+    if (r > had.r){ const passer = PIDS().filter(q => q !== me && M.players[q].seasonPts > M.players[me].seasonPts).sort((a,b) => M.players[a].seasonPts - M.players[b].seasonPts)[0];
+      news.push(`${passer ? P[passer].name : "Someone"} just passed you. You're #${r}. Answer back.`); }
+    lastRank = r;
+  }
+  news.slice(0, 2).forEach((n, i) => setTimeout(() => { toast(n); if (i === 0) sfx("down"); }, i * 3500));
+}
+
+/* ================= PLAYERS ================= */
+async function addPlayer(){
+  const name = (document.getElementById("npName").value || "").trim().replace(/\s+/g, " ");
+  const team = (document.getElementById("npTeam").value || "").trim().replace(/\s+/g, " ");
+  const id = slug(name);
+  if (!name || !id){ toast("Type a name first."); return; }
+  if (P[id] || Object.values(P).some(x => x.name.toLowerCase() === name.toLowerCase())){ toast(`${name} is already on the leaderboard.`); return; }
+  if (PIDS().length >= MAX_PLAYERS){ toast(`The leaderboard holds ${MAX_PLAYERS} players.`); return; }
+  const doc = { name: name.slice(0,20), team: team.slice(0,24), color: newColor || "orange", order: Date.now(), joined: todayStr(), createdAt: Date.now() };
+  P[id] = { id, ...doc };
+  adding = false; picking = false; me = id; LS.set("fd_me", me);
+  render(); celebrate("big"); sfx("full"); hype("Welcome", `${doc.name} joins the grind`);
+  if (!shared){ const extra = LS.get("fd_players", {}); extra[id] = doc; LS.set("fd_players", extra); return; }
+  try { await playersCol.doc(id).set(doc); }
+  catch (e){ delete P[id]; me = null; LS.set("fd_me", null); render(); toast("Couldn't add that player. Check the connection and try again."); }
+}
+function applyPlayers(docs){
+  for (const [id, b] of Object.entries(docs)){
+    if (!b || typeof b.name !== "string" || FOUNDERS.has(id)) continue;
+    P[id] = { id, name:b.name, team:b.team || "", color: styleOf(b.color) ? b.color : "orange", order: typeof b.order === "number" ? b.order : 1e15, joined: /^\d{4}-\d{2}-\d{2}$/.test(b.joined || "") ? b.joined : SEASON_START };
+  }
 }
 
 /* ================= ACTIONS ================= */
 function change(exId, newVal, opts = {}){
   if (!me || !canWrite) return;
   if (!pinOK){ pinOpen = true; render(); return; }
+  if (!inSeason(selDate) || selDate > M.today){ toast(M.pre ? `Tip-off is ${fmtDate(SEASON_START)}. Save it for game day.` : "The season is over. Check the final standings."); return; }
+  if (P[me].joined && selDate < P[me].joined){ toast("You joined after this day. Log from your first day on."); return; }
+  const at = opts.el ? originOf(opts.el) : null; opts.el = at;
+  const r0 = rankOf(me), ahead0 = PIDS().filter(q => q !== me && M.players[q].seasonPts > M.players[me].seasonPts);
   const x = M.players[me].days[selDate], e = EX.find(z => z.id === exId);
   const before = M.players[me].days[selDate];
   newVal = Math.max(0, Math.min(Math.round(newVal), x.cap[exId] === Infinity ? 99999 : x.cap[exId]));
@@ -918,22 +1192,37 @@ function change(exId, newVal, opts = {}){
   const up = newVal > old;
   if (up && !beforeGoal && newVal >= goal) slamEx = exId;
   render();
-  announceBadges(b0);
   const nx = M.players[me].days[selDate];
-  if (!up) { sfx("down"); return; }
+  if (!up) { sfx("down"); lastRank = rankOf(me); return; }
   buzz(15);
+  // did this rep move you up the leaderboard?
+  const r1 = rankOf(me), passed = ahead0.filter(q => M.players[q].seasonPts <= M.players[me].seasonPts);
+  const rankUp = r1 < r0 && passed.length > 0;
+  lastRank = r1;
+  const later = rankUp ? () => rankUpFx(r1, passed) : null;
+  let queued = 0;
   const nowRecovered = M.players[me].days[addDays(selDate,-1)]?.recovered;
-  if (!beforeFull && nx.full && (!nx.comeback || nowRecovered)) { fullDay(nx); return; }
-  if (!prevRecovered && nowRecovered){ celebrate("big"); hype("Comeback", `${DNL[dow(addDays(selDate,-1))]} recovered · streak saved`); sfx("full"); return; }
-  if (slamEx || (up && !beforeGoal && newVal >= goal)) { celebrate("mid", opts.el); sfx("done"); buzz([20,40,30]); return; }
-  if (x.wk && Math.floor(newVal/50) > Math.floor(old/50)) { celebrate("mid", opts.el); hype(`${newVal}`, `${e.name.toLowerCase()} today · bonus`); sfx("done"); return; }
-  celebrate("small", opts.el); sfx("tick");
+  if (!beforeFull && nx.full && (!nx.comeback || nowRecovered)) { fullDay(nx); queued = 2700; }
+  else if (!prevRecovered && nowRecovered){ celebrate("big"); hype("Comeback", `${DNL[dow(addDays(selDate,-1))]} recovered · streak saved`); sfx("full"); queued = 2700; }
+  else if (later) { later(); announceBadges(b0, 2700); return; }
+  else if (slamEx || (up && !beforeGoal && newVal >= goal)) { celebrate("mid", opts.el); sfx("done"); buzz([20,40,30]); hype(cheer(), `${e.name} done · ${e.unit === "min" ? "rope" : e.target + " deep"}`); queued = 2700; }
+  else if (x.wk && Math.floor(newVal/50) > Math.floor(old/50)) { celebrate("mid", opts.el); hype(`${newVal}`, `${e.name.toLowerCase()} today · bonus`); sfx("done"); queued = 2700; }
+  else { celebrate("small", opts.el); sfx("tick"); }
+  if (later) setTimeout(later, queued);
+  announceBadges(b0, queued + (later ? 2700 : 0));
 }
+function rankOf(p){ if (!M || !M.players[p]) return 99; const mine = M.players[p].seasonPts; return 1 + PIDS().filter(q => M.players[q].seasonPts > mine).length; }
+function rankUpFx(r, passed){
+  const T = pc(me), names = passed.map(q => P[q].name);
+  celebrate("big"); sfx("rank"); buzz([40,60,40,60,120]);
+  hype(r === 1 ? "#1" : `Up to #${r}`, r === 1 ? `${T.rank} · top of the board` : `${T.rank} · passed ${names.slice(0,2).join(" & ")}${names.length > 2 ? " +" + (names.length-2) : ""}`);
+}
+const fmtDate = d => parse(d).toLocaleDateString(undefined, { weekday:"short", month:"short", day:"numeric" });
 function fullDay(x){
   const pl = M.players[me];
   celebrate("big"); sfx("full"); buzz([30,50,30,50,80]);
-  const lines = ["Discipline > motivation", "Nobody's checking. You did it anyway.", "Stronger than yesterday", "That's a bucket", "Money in the bank"];
-  hype(x.wk ? "Weekend full" : "Full day", `${pl.streak} day streak · ${lines[Math.floor(Math.random()*lines.length)]}`);
+  const lines = ["Discipline beats motivation", "Nobody's checking. You did it anyway.", "Stronger than yesterday", "That's a bucket", "Money in the bank", "Habits are built right here"];
+  hype(cheer(), `Day ${dayNum(x.d)} full · ${pl.streak}-day streak · ${pick(lines)}`);
 }
 
 app.addEventListener("click", ev => {
@@ -944,10 +1233,17 @@ app.addEventListener("click", ev => {
   if (t.dataset.bview){ bview = t.dataset.bview; render(); return; }
   if (t.dataset.run){ if (!canWrite){ toast("View only."); return; } if (!pinOK){ pinOpen = true; render(); return; } openRunner(t.dataset.run); return; }
   if (t.id === "pinGo"){ const v = (document.getElementById("pinIn").value || "").trim();
-    if (v === FAMILY_PIN){ pinOK = true; LS.set("fd_pin", v); pinOpen = false; render(); toast("Unlocked. Go get your reps."); sfx("done"); }
+    if (v === FAMILY_PIN){ pinOK = true; LS.set("fd_pin", v); pinOpen = false; if (pinThenAdd){ pinThenAdd = false; adding = true; newName = ""; newTeam = ""; newColor = null; } render(); toast("Unlocked. Go get your reps."); sfx("done"); }
     else { toast("That PIN isn't right. Try again."); sfx("down"); } return; }
-  if (t.id === "pinX"){ pinOpen = false; render(); return; }
-  if (t.dataset.me){ me = t.dataset.me; LS.set("fd_me", me); openEntry = null; render(); return; }
+  if (t.id === "pinX"){ pinOpen = false; pinThenAdd = false; render(); return; }
+  if (t.dataset.me){ me = t.dataset.me; LS.set("fd_me", me); openEntry = null; picking = false; render(); return; }
+  if (t.dataset.lb){ lbMode = t.dataset.lb; LS.set("fd_lb", lbMode); render(); return; }
+  if (t.id === "whoBtn"){ picking = true; render(); return; }
+  if (t.id === "pickX"){ picking = false; render(); return; }
+  if (t.id === "addBtn" || t.id === "addBtn2"){ if (!pinOK){ pinOpen = true; pinThenAdd = true; render(); return; } adding = true; newName = ""; newTeam = ""; newColor = null; render(); const i = document.getElementById("npName"); i && i.focus(); return; }
+  if (t.dataset.color){ newName = document.getElementById("npName").value; newTeam = document.getElementById("npTeam").value; newColor = t.dataset.color; render(); return; }
+  if (t.id === "npCancel"){ adding = false; render(); return; }
+  if (t.id === "npSave"){ addPlayer(); return; }
   if (t.id === "snd"){ sound = !sound; LS.set("fd_sound", sound); render(); if (sound) sfx("tick"); return; }
   if (t.dataset.day){ selDate = t.dataset.day; openEntry = null; render(); return; }
   if (t.dataset.set){
@@ -967,6 +1263,7 @@ app.addEventListener("click", ev => {
   if (t.dataset.close && (ev.target === t || t.tagName === "BUTTON")){ stopTimer(); sheet = null; render(); return; }
 });
 app.addEventListener("keydown", ev => {
+  if (ev.key === "Enter" && (ev.target.id === "npName" || ev.target.id === "npTeam")){ addPlayer(); return; }
   if (ev.key === "Enter" && ev.target.id === "pinIn"){ document.getElementById("pinGo").click(); return; }
   if (ev.key === "Enter" && ev.target.matches(".entry input")){ const id = ev.target.id.slice(3); document.querySelector(`[data-save="${id}"]`).click(); }
   if (ev.key === "Escape" && sheet){ stopTimer(); sheet = null; render(); }
@@ -984,73 +1281,305 @@ function startTimer(btn){
 }
 function stopTimer(){ if (timer){ clearInterval(timer); timer = null; } }
 
-/* ================= FX ================= */
+/* ================= FX: team celebrations ================= */
 const cv = document.getElementById("fx"), cx = cv.getContext("2d");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let parts = [], raf = null;
 function sizeCv(){ cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
 addEventListener("resize", sizeCv); sizeCv();
-const COLORS = ["#FF7A1A","#FFB23F","#2E7BFF","#8DB6FF","#E3262F","#FFFFFF","#111111"];
-function celebrate(size, el){
+const R = (a, b) => a + Math.random() * (b - a);
+const pick = arr => arr[(Math.random() * arr.length) | 0];
+const W = () => innerWidth, H = () => innerHeight;
+
+function originOf(el){
+  if (el && typeof el.x === "number" && typeof el.y === "number" && !el.getBoundingClientRect) return el;
+  if (el && el.getBoundingClientRect){ const r = el.getBoundingClientRect(); return { x: r.left + r.width/2, y: r.top + r.height/2 }; }
+  return { x: W()/2, y: H()*0.45 };
+}
+function add(p){ parts.push(Object.assign({ vx:0, vy:0, g:0, rot:0, vr:0, life:60, max:60, kind:"rect", w:6, h:6 }, p, { max: p.life || 60 })); }
+function confetti(n, o, colors, spread = 1, speed = [2,6], g = .18, life = 70){
+  for (let i = 0; i < n; i++){ const a = Math.random()*Math.PI*2, sp = R(speed[0], speed[1]) * spread;
+    add({ x:o.x, y:o.y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp - 2, g, w:R(4,9), h:R(3,8), rot:R(0,6), vr:R(-.3,.3), c:pick(colors), life:R(life*.7, life) }); }
+}
+function flash(color, ms = 260){
   if (reduce) return;
-  let ox = innerWidth/2, oy = innerHeight*0.45;
-  if (el && el.getBoundingClientRect){ const r = el.getBoundingClientRect(); ox = r.left + r.width/2; oy = r.top + r.height/2; }
-  const n = size === "big" ? 220 : size === "mid" ? 90 : 22;
-  for (let i = 0; i < n; i++){
-    const big = size === "big";
-    const a = big ? (-Math.PI/2 + (Math.random()-.5)*Math.PI*1.3) : Math.random()*Math.PI*2;
-    const sp = (big ? 9 + Math.random()*11 : size === "mid" ? 4 + Math.random()*8 : 2 + Math.random()*4);
-    parts.push({ x: big ? innerWidth*(i%2 ? .15 : .85) : ox, y: big ? innerHeight : oy,
-      vx: Math.cos(a)*sp + (big ? (i%2 ? 3 : -3) : 0), vy: Math.sin(a)*sp, g: size === "small" ? .12 : .28,
-      w: 5 + Math.random()*6, h: 3 + Math.random()*8, rot: Math.random()*6, vr: (Math.random()-.5)*.4,
-      c: COLORS[(Math.random()*COLORS.length)|0], life: size === "small" ? 40 : 160, ball: big && Math.random() < .06 });
+  const f = document.createElement("div"); f.className = "flash"; f.style.background = `radial-gradient(circle at 50% 30%, ${color}, transparent 70%)`;
+  f.style.animationDuration = ms + "ms"; document.body.appendChild(f); setTimeout(() => f.remove(), ms + 40);
+}
+function shake(){ if (reduce) return; document.body.classList.remove("shake"); void document.body.offsetWidth; document.body.classList.add("shake"); setTimeout(() => document.body.classList.remove("shake"), 450); }
+
+/* one generator per team; size: small (a set), mid (an exercise done), big (full day / moved up) */
+const FX = {
+  storm(size, o, T){
+    const drops = size === "big" ? 160 : size === "mid" ? 60 : 18;
+    for (let i = 0; i < drops; i++){
+      const x = size === "small" ? o.x + R(-50,50) : R(0, W()), y = size === "small" ? o.y + R(-60,-10) : R(-H()*.4, 0);
+      add({ kind:"drop", x, y, vx:-1.2, vy:R(9,15), g:.2, c:pick(["#2E7BFF","#8DB6FF","#FF7A1A","#FFFFFF"]), life: size === "small" ? 26 : 90 });
+    }
+    const bolts = size === "big" ? 3 : size === "mid" ? 1 : 0;
+    for (let i = 0; i < bolts; i++) setTimeout(() => {
+      const bx = size === "mid" ? o.x + R(-30,30) : R(W()*.15, W()*.85);
+      add({ kind:"bolt", x:bx, y:0, to: size === "mid" ? o.y : R(H()*.45, H()*.8), c: i % 2 ? "#2E7BFF" : "#FFB36B", life:16, seed:Math.random() });
+      flash(i % 2 ? "rgba(46,123,255,.55)" : "rgba(255,160,80,.5)", 220);
+    }, i * 380);
+    confetti(size === "small" ? 8 : 40, o, T.colors, 1, [2,6], .2, 60);
+  },
+  lancers(size, o, T){
+    const n = size === "big" ? 12 : size === "mid" ? 4 : 0;
+    for (let i = 0; i < n; i++) setTimeout(() => {
+      const fromLeft = size === "mid" ? true : i % 2 === 0, y = size === "mid" ? o.y + R(-40,40) : R(H()*.15, H()*.85);
+      add({ kind:"lance", x: fromLeft ? -140 : W()+140, y, vx: fromLeft ? R(18,24) : -R(18,24), vy: fromLeft ? -R(0,2) : R(0,2), c:pick(["#FFFFFF","#6CACE4","#B9DCF5"]), flag:pick(["#0B2545","#6CACE4"]), life:70 });
+    }, i * 90);
+    if (size !== "small"){ add({ kind:"ring", x:o.x, y:o.y, r:10, vr2: size === "big" ? 14 : 8, c:"#6CACE4", life:40 });
+      add({ kind:"shield", x: size === "big" ? W()/2 : o.x, y: size === "big" ? H()*.42 : o.y, s: size === "big" ? 2.4 : 1.2, life: size === "big" ? 80 : 50 }); }
+    confetti(size === "small" ? 16 : size === "mid" ? 40 : 110, o, T.colors, 1, [2,7], .16, 80);
+  },
+  bombers(size, o, T){
+    if (size !== "small"){
+      const drops = size === "big" ? [.15,.32,.5,.68,.85].map(f => ({ x: W()*f, ty: R(H()*.4, H()*.75) })) : [{ x: o.x, ty: o.y }];
+      add({ kind:"plane", x:-90, y: size === "big" ? 80 : Math.max(60, o.y - 220), vx: size === "big" ? 9 : 11, drops, life:260, s: size === "big" ? 1.6 : 1.1 });
+    }
+    if (size === "small"){ confetti(18, o, ["#E3262F","#111111","#FF8A3D","#FFFFFF"], 1, [2,6], .2, 40); add({ kind:"ring", x:o.x, y:o.y, r:6, vr2:5, c:"#E3262F", life:22 }); }
+  },
+  gamers(size, o, T){
+    const n = size === "big" ? 140 : size === "mid" ? 60 : 20;
+    for (let i = 0; i < n; i++){
+      const a = Math.random()*Math.PI*2, sp = size === "big" ? R(3,9) : R(2,6);
+      const ox = size === "big" ? R(0, W()) : o.x, oy = size === "big" ? R(-40, H()*.3) : o.y;
+      add({ kind:"pixel", x:ox, y:oy, vx: Math.round(Math.cos(a)*sp), vy: Math.round(Math.sin(a)*sp) - (size === "big" ? 0 : 2), g: .25, w:[6,8,10][i%3], c:pick(T.colors), life:R(40,80) });
+    }
+    add({ kind:"text", x:o.x, y:o.y - 20, vy:-1.6, text: size === "small" ? "+10" : size === "mid" ? "+XP" : "LEVEL UP", c:"#86EFAC", life:60, size: size === "big" ? 34 : 20 });
+  },
+  cyclones(size, o, T){
+    const n = size === "big" ? 220 : size === "mid" ? 90 : 26;
+    const cx0 = size === "big" ? W()/2 : o.x, base = size === "big" ? H()*.85 : o.y + 30;
+    const height = size === "big" ? H()*.75 : size === "mid" ? 160 : 70;
+    for (let i = 0; i < n; i++){
+      const h = Math.random();
+      add({ kind:"swirl", cx:cx0, base, h, height, ang:R(0,Math.PI*2), spin:R(.18,.32) * (size === "big" ? 1 : 1.2), top: size === "big" ? 170 : size === "mid" ? 70 : 34,
+            drift: size === "big" ? R(-1.2,1.2) : 0, c:pick(T.colors), w:R(3,7), life:R(60,110) });
+    }
+  },
+  lions(size, o, T){
+    const steps = size === "big" ? 12 : size === "mid" ? 6 : 1;
+    for (let i = 0; i < steps; i++) setTimeout(() => {
+      let x, y, rot;
+      if (size === "small"){ x = o.x; y = o.y; rot = R(-.3,.3); }
+      else if (size === "mid"){ x = o.x - 110 + i*44; y = o.y + (i % 2 ? -16 : 16); rot = Math.PI/2; }
+      else { const lane = i < 6 ? 0 : 1, k = i % 6; x = lane ? W() - 40 - k*(W()-80)/5 : 40 + k*(W()-80)/5; y = (lane ? H()*.62 : H()*.32) + (k % 2 ? -18 : 18); rot = lane ? -Math.PI/2 : Math.PI/2; }
+      add({ kind:"paw", x, y, rot, c: i % 3 === 2 ? "#F5C542" : "#3B6CF6", life:70, s: size === "big" ? 1.3 : 1 });
+    }, i * (size === "big" ? 120 : 90));
+    confetti(size === "small" ? 12 : size === "mid" ? 40 : 120, o, T.colors, 1, [2,7], .18, 80);
+  },
+  confetti(size, o, T){
+    if (size === "big"){ for (let i = 0; i < 200; i++){ const a = -Math.PI/2 + R(-.7,.7), sp = R(9,19);
+      add({ x: i%2 ? W()*.15 : W()*.85, y:H(), vx:Math.cos(a)*sp + (i%2 ? 3 : -3), vy:Math.sin(a)*sp, g:.28, w:R(5,11), h:R(3,11), rot:R(0,6), vr:R(-.4,.4), c:pick(T.colors.concat(["#FF7A1A"])), life:160 }); } }
+    else confetti(size === "mid" ? 90 : 22, o, T.colors.concat(["#FF7A1A"]), 1, size === "mid" ? [4,11] : [2,5], size === "mid" ? .28 : .12, size === "mid" ? 150 : 40);
   }
+};
+
+function celebrate(size, el, who){
+  const T = pc(who || me || PIDS()[0]);
+  if (reduce){ if (size !== "small") flash(T.hex + "66", 300); return; }
+  (FX[T.fx] || FX.confetti)(size, originOf(el), T);
   if (!raf) raf = requestAnimationFrame(tick);
 }
-function tick(){
-  const d = devicePixelRatio; cx.setTransform(d,0,0,d,0,0); cx.clearRect(0,0,innerWidth,innerHeight);
-  parts = parts.filter(p => p.life > 0 && p.y < innerHeight + 40);
-  for (const p of parts){
-    p.vy += p.g; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
-    cx.save(); cx.globalAlpha = Math.min(1, p.life/30); cx.translate(p.x, p.y); cx.rotate(p.rot);
-    if (p.ball){ cx.fillStyle = "#FF7A1A"; cx.beginPath(); cx.arc(0,0,9,0,7); cx.fill(); cx.strokeStyle = "#2a1200"; cx.lineWidth = 1.4; cx.beginPath(); cx.moveTo(-9,0); cx.lineTo(9,0); cx.moveTo(0,-9); cx.lineTo(0,9); cx.stroke(); }
-    else { cx.fillStyle = p.c; cx.fillRect(-p.w/2, -p.h/2, p.w, p.h); }
-    cx.restore();
-  }
-  raf = parts.length ? requestAnimationFrame(tick) : (cx.clearRect(0,0,innerWidth,innerHeight), null);
+
+function drawBolt(p){
+  cx.save(); cx.globalAlpha = p.life % 4 < 2 ? 1 : .55; cx.strokeStyle = p.c; cx.lineWidth = 4; cx.shadowColor = p.c; cx.shadowBlur = 18;
+  let x = p.x, y = p.y, s = p.seed; cx.beginPath(); cx.moveTo(x, y);
+  while (y < p.to){ s = (s * 9301 + 49297) % 233280 / 233280; x += (s - .5) * 60; y += 24 + s * 20; cx.lineTo(x, y); }
+  cx.stroke(); cx.lineWidth = 1.5; cx.strokeStyle = "#FFFFFF"; cx.stroke(); cx.restore();
 }
-function hype(big, small){
-  const el = document.createElement("div"); el.className = "hype";
-  el.innerHTML = `<div class="in"><div class="big">${esc(big)}</div><div class="small">${esc(small)}</div></div>`;
+function drawPlane(p){
+  cx.save(); cx.translate(p.x, p.y); cx.rotate(Math.PI/2); cx.scale(p.s, p.s);
+  cx.fillStyle = "rgba(0,0,0,.35)"; cx.beginPath(); cx.moveTo(4,-26); cx.lineTo(26,-4); cx.lineTo(16,-4); cx.lineTo(10,2); cx.lineTo(4,-3); cx.lineTo(-2,2); cx.lineTo(-8,-4); cx.lineTo(-18,-4); cx.closePath(); cx.fill();
+  cx.fillStyle = "#8A8F98"; cx.strokeStyle = "#111"; cx.lineWidth = 1.5;
+  cx.beginPath(); cx.moveTo(0,-30); cx.lineTo(24,-8); cx.lineTo(14,-8); cx.lineTo(8,-2); cx.lineTo(0,-7); cx.lineTo(-8,-2); cx.lineTo(-14,-8); cx.lineTo(-24,-8); cx.closePath(); cx.fill(); cx.stroke();
+  cx.fillStyle = "#E3262F"; cx.beginPath(); cx.moveTo(0,-30); cx.lineTo(5,-16); cx.lineTo(-5,-16); cx.closePath(); cx.fill();
+  cx.restore();
+}
+function drawShield(p){
+  const t = 1 - p.life / p.max, a = p.life < 20 ? p.life / 20 : 1, sc = p.s * (t < .15 ? 2.2 - t * 8 : 1);
+  cx.save(); cx.globalAlpha = a; cx.translate(p.x, p.y); cx.scale(sc, sc);
+  cx.shadowColor = "#6CACE4"; cx.shadowBlur = 24;
+  cx.fillStyle = "#0B2545"; cx.strokeStyle = "#6CACE4"; cx.lineWidth = 4;
+  cx.beginPath(); cx.moveTo(0,-34); cx.lineTo(28,-24); cx.lineTo(28,-2); cx.bezierCurveTo(28,18,14,30,0,36); cx.bezierCurveTo(-14,30,-28,18,-28,-2); cx.lineTo(-28,-24); cx.closePath(); cx.fill(); cx.stroke();
+  cx.shadowBlur = 0; cx.strokeStyle = "#FFFFFF"; cx.lineWidth = 3.5; cx.beginPath(); cx.moveTo(0,26); cx.lineTo(0,-16); cx.stroke();
+  cx.fillStyle = "#FFFFFF"; cx.beginPath(); cx.moveTo(0,-26); cx.lineTo(-7,-14); cx.lineTo(7,-14); cx.closePath(); cx.fill();
+  cx.strokeStyle = "#6CACE4"; cx.lineWidth = 3; cx.beginPath(); cx.moveTo(-12,2); cx.lineTo(12,2); cx.stroke();
+  cx.restore();
+}
+function drawPaw(p){
+  const a = Math.min(1, p.life / 25), sc = p.s * (p.life > p.max - 8 ? 1.4 - (p.max - p.life) * .05 : 1);
+  cx.save(); cx.globalAlpha = a; cx.translate(p.x, p.y); cx.rotate(p.rot); cx.scale(sc, sc); cx.fillStyle = p.c;
+  cx.beginPath(); cx.ellipse(0, 6, 11, 9, 0, 0, 7); cx.fill();
+  [[-11,-6],[-4,-12],[4,-12],[11,-6]].forEach(([tx,ty]) => { cx.beginPath(); cx.ellipse(tx, ty, 4, 5, 0, 0, 7); cx.fill(); });
+  cx.restore();
+}
+function explode(p){
+  const o = { x:p.x, y:p.y };
+  confetti(70, o, ["#E3262F","#111111","#FF8A3D","#FFD166","#FFFFFF"], 1.4, [3,10], .22, 70);
+  add({ kind:"ring", x:o.x, y:o.y, r:8, vr2:9, c:"#FF8A3D", life:30 });
+  add({ kind:"ring", x:o.x, y:o.y, r:4, vr2:6, c:"#E3262F", life:34 });
+  flash("rgba(255,120,40,.45)", 200); shake(); teamSound("boom"); buzz(40);
+}
+function tick(){
+  const d = devicePixelRatio; cx.setTransform(d,0,0,d,0,0); cx.clearRect(0,0,W(),H());
+  const next = [];
+  for (const p of parts){
+    p.life--;
+    if (p.kind === "swirl"){
+      p.ang += p.spin; p.h = Math.min(1.05, p.h + .006); p.cx += p.drift;
+      const r = 10 + p.top * p.h, x = p.cx + Math.cos(p.ang) * r, y = p.base - p.h * p.height + Math.sin(p.ang) * r * .18;
+      p.x = x; p.y = y;
+      cx.globalAlpha = Math.min(1, p.life / 30); cx.fillStyle = p.c; cx.fillRect(x - p.w/2, y - p.w/4, p.w, p.w/2);
+    } else if (p.kind === "bolt") { drawBolt(p); }
+    else if (p.kind === "paw") { drawPaw(p); }
+    else if (p.kind === "plane") {
+      p.x += p.vx;
+      while (p.drops.length && p.x >= p.drops[0].x){ const dp = p.drops.shift(); add({ kind:"bomb", x:dp.x, y:p.y + 12, vx:p.vx*.25, vy:1, g:.5, ty:dp.ty, life:200 }); teamSound("tick"); }
+      drawPlane(p); if (p.x > W() + 120) continue;
+    }
+    else if (p.kind === "shield") { drawShield(p); }
+    else if (p.kind === "ring") {
+      p.r += p.vr2; cx.globalAlpha = Math.max(0, p.life / p.max); cx.strokeStyle = p.c; cx.lineWidth = 4; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 7); cx.stroke();
+    } else if (p.kind === "text") {
+      p.y += p.vy; cx.globalAlpha = Math.min(1, p.life / 20); cx.fillStyle = p.c; cx.font = `900 ${p.size}px "Big Shoulders Display", Impact, sans-serif`; cx.textAlign = "center"; cx.fillText(p.text, p.x, p.y);
+    } else {
+      p.vy += p.g; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      if (p.kind === "bomb" && p.y >= p.ty){ explode(p); continue; }
+      cx.save(); cx.globalAlpha = Math.min(1, p.life / 25); cx.translate(p.x, p.y);
+      if (p.kind === "drop"){ cx.strokeStyle = p.c; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(0,0); cx.lineTo(p.vx*1.2, -14); cx.stroke(); }
+      else if (p.kind === "lance"){ const dir = Math.sign(p.vx); cx.scale(dir, 1); cx.strokeStyle = p.c; cx.lineWidth = 3; cx.beginPath(); cx.moveTo(-120,0); cx.lineTo(0,0); cx.stroke();
+        cx.fillStyle = p.c; cx.beginPath(); cx.moveTo(18,0); cx.lineTo(0,-6); cx.lineTo(0,6); cx.fill();
+        cx.fillStyle = p.flag; cx.beginPath(); cx.moveTo(-96,0); cx.lineTo(-76,-14); cx.lineTo(-76,0); cx.fill(); }
+      else if (p.kind === "bomb"){ cx.fillStyle = "#111"; cx.beginPath(); cx.arc(0,0,11,0,7); cx.fill(); cx.strokeStyle = "#E3262F"; cx.lineWidth = 2; cx.stroke();
+        cx.fillStyle = "#FFD166"; cx.beginPath(); cx.arc(6,-13,3 + Math.random()*2,0,7); cx.fill(); }
+      else if (p.kind === "pixel"){ const s = p.w; cx.fillStyle = p.c; cx.fillRect(Math.round(-s/2/2)*2, Math.round(-s/2/2)*2, s, s); }
+      else { cx.rotate(p.rot); cx.fillStyle = p.c; cx.fillRect(-p.w/2, -p.h/2, p.w, p.h); }
+      cx.restore();
+      if (p.y > H() + 60 && p.kind !== "lance") continue;
+    }
+    if (p.life > 0 && p.x > -300 && p.x < W() + 300) next.push(p);
+  }
+  cx.globalAlpha = 1; parts = next;
+  raf = parts.length ? requestAnimationFrame(tick) : (cx.clearRect(0,0,W(),H()), null);
+}
+
+function hype(big, small, who){
+  const T = pc(who || me || PIDS()[0]);
+  const el = document.createElement("div"); el.className = "hype fx-" + T.fx;
+  el.style.setProperty("--h1", T.hex); el.style.setProperty("--h2", T.deep); el.style.setProperty("--h3", T.alt);
+  el.innerHTML = `<div class="in"><div class="emb">${emblem(T.icon, 64)}</div><div class="big">${esc(big)}</div><div class="small">${esc(small)}</div></div>`;
   document.body.appendChild(el); setTimeout(() => el.remove(), 2500);
 }
-function toast(msg){ const el = document.createElement("div"); el.className = "toast"; el.textContent = msg; document.body.appendChild(el); setTimeout(() => el.remove(), 3200); }
+const cheer = who => pick(pc(who || me || PIDS()[0]).cheer);
+function toast(msg){ const el = document.createElement("div"); el.className = "toast"; el.textContent = msg; document.body.appendChild(el); setTimeout(() => el.remove(), 3400); }
 function buzz(p){ try { navigator.vibrate && navigator.vibrate(p); } catch {} }
-let ac = null;
-function sfx(kind){
+
+/* emblems: simple original icons for each team */
+function emblem(icon, size = 28){
+  const s = size, paths = {
+    bolt:`<path d="M28 4 10 30h12l-4 18 20-28H26z" fill="currentColor"/>`,
+    shield:`<path d="M24 3 42 9v14c0 11-8 18-18 22C14 41 6 34 6 23V9z" fill="currentColor"/><path d="M24 9 37 13v10c0 8-6 13-13 16-7-3-13-8-13-16V13z" fill="#0A0F1C" opacity=".35"/><path d="M24 38V15" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/><path d="M24 10l-5 8h10z" fill="#FFFFFF"/><path d="M17 22h14" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>`,
+    plane:`<path d="M24 8 46 30 36 30 30 36 24 31 18 36 12 30 2 30z" fill="currentColor"/><path d="M24 8 30 24 24 22 18 24z" fill="#0A0F1C" opacity=".35"/>`,
+    lance:`<path d="M8 44 36 16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M34 6l10 4-4 10z" fill="currentColor"/><path d="M14 30l8 8-10 2z" fill="currentColor" opacity=".7"/>`,
+    bomb:`<circle cx="22" cy="30" r="14" fill="currentColor"/><path d="M31 18l5-5" stroke="currentColor" stroke-width="4"/><path d="M38 6l1 4 4 1-4 1-1 4-1-4-4-1 4-1z" fill="#FFD166"/>`,
+    pad:`<rect x="4" y="16" width="40" height="20" rx="10" fill="currentColor"/><path d="M13 22v8M9 26h8" stroke="#0A0F1C" stroke-width="3"/><circle cx="32" cy="24" r="2.5" fill="#0A0F1C"/><circle cx="37" cy="29" r="2.5" fill="#0A0F1C"/>`,
+    twister:`<path d="M6 8h36M10 16h28M15 24h18M19 32h10M22 40h5" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>`,
+    paw:`<ellipse cx="24" cy="31" rx="10" ry="8" fill="currentColor"/><ellipse cx="12" cy="20" rx="4" ry="5" fill="currentColor"/><ellipse cx="20" cy="13" rx="4" ry="5" fill="currentColor"/><ellipse cx="28" cy="13" rx="4" ry="5" fill="currentColor"/><ellipse cx="36" cy="20" rx="4" ry="5" fill="currentColor"/>`,
+    ball:`<circle cx="24" cy="24" r="19" fill="currentColor"/><path d="M5 24h38M24 5v38M11 11c6 6 6 20 0 26M37 11c-6 6-6 20 0 26" stroke="#0A0F1C" stroke-width="2" fill="none"/>`
+  };
+  return `<svg viewBox="0 0 48 48" width="${s}" height="${s}" aria-hidden="true">${paths[icon] || paths.ball}</svg>`;
+}
+
+/* ================= SOUND: team sound sets ================= */
+let ac = null, noiseBuf = null;
+function audio(){
+  ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  if (ac.state === "suspended") ac.resume();
+  if (!noiseBuf){ noiseBuf = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; }
+  return ac;
+}
+function tone(f, s, dur, type = "sine", vol = .16, f2 = null){
+  const t0 = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.setValueAtTime(f, t0+s);
+  if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0+s+dur);
+  g.gain.setValueAtTime(0, t0+s); g.gain.linearRampToValueAtTime(vol, t0+s+.012); g.gain.exponentialRampToValueAtTime(.0001, t0+s+dur);
+  o.connect(g).connect(ac.destination); o.start(t0+s); o.stop(t0+s+dur+.05); return o;
+}
+function noise(s, dur, vol = .2, type = "lowpass", f1 = 800, f2 = null, q = .8){
+  const t0 = ac.currentTime, src = ac.createBufferSource(), fl = ac.createBiquadFilter(), g = ac.createGain();
+  src.buffer = noiseBuf; src.loop = true; fl.type = type; fl.Q.value = q; fl.frequency.setValueAtTime(f1, t0+s); if (f2) fl.frequency.exponentialRampToValueAtTime(f2, t0+s+dur);
+  g.gain.setValueAtTime(0, t0+s); g.gain.linearRampToValueAtTime(vol, t0+s+.02); g.gain.exponentialRampToValueAtTime(.0001, t0+s+dur);
+  src.connect(fl).connect(g).connect(ac.destination); src.start(t0+s); src.stop(t0+s+dur+.05);
+}
+function growl(s, dur, f, vol = .12){
+  const t0 = ac.currentTime, o = ac.createOscillator(), lfo = ac.createOscillator(), lg = ac.createGain(), fl = ac.createBiquadFilter(), g = ac.createGain();
+  o.type = "sawtooth"; o.frequency.setValueAtTime(f, t0+s); o.frequency.exponentialRampToValueAtTime(f*.7, t0+s+dur);
+  lfo.frequency.value = 26; lg.gain.value = vol*.8; lfo.connect(lg).connect(g.gain);
+  fl.type = "lowpass"; fl.frequency.value = 900;
+  g.gain.setValueAtTime(0, t0+s); g.gain.linearRampToValueAtTime(vol, t0+s+.08); g.gain.exponentialRampToValueAtTime(.0001, t0+s+dur);
+  o.connect(fl).connect(g).connect(ac.destination); o.start(t0+s); lfo.start(t0+s); o.stop(t0+s+dur+.05); lfo.stop(t0+s+dur+.05);
+}
+const SOUNDS = {
+  storm: {
+    tick(){ tone(1400, 0, .09, "sine", .12, 500); tone(1900, .05, .06, "sine", .06, 900); },
+    done(){ noise(0, .18, .3, "highpass", 2500); noise(.05, 1.4, .35, "lowpass", 380, 90); },
+    full(){ noise(0, .2, .35, "highpass", 2200); noise(.05, 2.2, .45, "lowpass", 420, 70); noise(.55, .15, .25, "highpass", 3000); [523,659,784].forEach((f,i) => tone(f, .3 + i*.09, .35, "triangle", .08)); }
+  },
+  lancers: {
+    tick(){ tone(784, 0, .14, "sawtooth", .07); },
+    done(){ [523,659,784].forEach((f,i) => tone(f, i*.11, .16, "sawtooth", .08)); tone(1047, .33, .55, "sawtooth", .09); tone(784, .33, .55, "triangle", .05); },
+    full(){ [[392,0],[523,.13],[659,.26],[784,.39],[659,.6],[784,.73]].forEach(([f,t]) => tone(f, t, .2, "sawtooth", .08)); tone(1047, .9, .9, "sawtooth", .1); tone(784, .9, .9, "triangle", .06); tone(523, .9, .9, "triangle", .05); noise(.9, .5, .08, "bandpass", 3000, 2000, 2); }
+  },
+  bombers: {
+    tick(){ tone(130, 0, .14, "sine", .25, 55); noise(0, .08, .12, "lowpass", 600); },
+    done(){ tone(1700, 0, .55, "sine", .07, 350); },
+    full(){ [0,.26,.52].forEach(t => tone(1800, t, .5, "sine", .05, 380)); },
+    boom(){ noise(0, .9, .5, "lowpass", 260, 60); tone(70, 0, .8, "sine", .4, 35); }
+  },
+  gamers: {
+    tick(){ tone(988, 0, .07, "square", .07); tone(1319, .07, .2, "square", .07); },
+    done(){ [523,659,784,1047,1319,1568,2093].forEach((f,i) => tone(f, i*.05, .09, "square", .06)); },
+    full(){ [[523,.0],[659,.1],[784,.2],[1047,.3],[784,.42],[1047,.52]].forEach(([f,t]) => tone(f, t, .12, "square", .07)); tone(1319, .64, .45, "square", .08); tone(659, .64, .45, "triangle", .06); }
+  },
+  cyclones: {
+    tick(){ noise(0, .3, .18, "bandpass", 500, 2200, 1.6); },
+    done(){ noise(0, 1.1, .3, "bandpass", 300, 2600, 1.8); tone(420, 0, 1.1, "sine", .03, 760); },
+    full(){ noise(0, 2.0, .35, "bandpass", 250, 3000, 2); noise(.4, 1.6, .2, "lowpass", 900, 200); tone(380, 0, 1.8, "sine", .04, 820); }
+  },
+  lions: {
+    tick(){ growl(0, .22, 120, .09); },
+    done(){ growl(0, 1.0, 105, .16); growl(0, 1.0, 158, .07); noise(0, .9, .12, "lowpass", 700, 250); },
+    full(){ tone(80, 0, .35, "sine", .35, 45); tone(80, .3, .35, "sine", .35, 45); growl(.45, 1.5, 100, .18); growl(.45, 1.5, 150, .08); noise(.45, 1.3, .16, "lowpass", 800, 200); }
+  },
+  confetti: {
+    tick(){ tone(660, 0, .12, "triangle", .18, 1320); },
+    done(){ [523,659,784,1047].forEach((f,i) => tone(f, i*.07, .28, "triangle", .15)); },
+    full(){ tone(185, 0, .7, "sawtooth", .07); tone(233, 0, .7, "sawtooth", .06); [523,659,784,1047,1319].forEach((f,i) => tone(f, .35 + i*.08, .4, "triangle", .14)); }
+  }
+};
+function teamSound(kind, who){
+  if (!sound) return;
+  try { audio(); const set = SOUNDS[pc(who || me || PIDS()[0]).fx] || SOUNDS.confetti; (set[kind] || SOUNDS.confetti[kind] || (() => {}))(); } catch {}
+}
+function sfx(kind, who){
   if (!sound) return;
   try {
-    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    if (ac.state === "suspended") ac.resume();
-    const t0 = ac.currentTime;
-    const tone = (f, s, dur, type = "sine", vol = .16) => {
-      const o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.setValueAtTime(f, t0+s);
-      g.gain.setValueAtTime(0, t0+s); g.gain.linearRampToValueAtTime(vol, t0+s+.01); g.gain.exponentialRampToValueAtTime(.0001, t0+s+dur);
-      o.connect(g).connect(ac.destination); o.start(t0+s); o.stop(t0+s+dur+.02); return o; };
-    if (kind === "tick"){ const o = tone(660, 0, .12, "triangle", .18); o.frequency.exponentialRampToValueAtTime(1320, t0+.1); }
-    if (kind === "down") tone(330, 0, .12, "triangle", .1);
-    if (kind === "tap") tone(990, 0, .06, "square", .06);
-    if (kind === "beep") tone(880, 0, .15, "square", .09);
-    if (kind === "go") tone(1320, 0, .4, "square", .1);
-    if (kind === "done"){ [523,659,784,1047].forEach((f,i) => tone(f, i*.07, .28, "triangle", .15)); }
-    if (kind === "full"){ // arena horn + fanfare
-      tone(185, 0, .7, "sawtooth", .07); tone(233, 0, .7, "sawtooth", .06);
-      [523,659,784,1047,1319].forEach((f,i) => tone(f, .35 + i*.08, .4, "triangle", .14)); }
+    audio();
+    if (kind === "down") return void tone(330, 0, .12, "triangle", .1);
+    if (kind === "tap") return void tone(990, 0, .06, "square", .06);
+    if (kind === "beep") return void tone(880, 0, .15, "square", .09);
+    if (kind === "go") return void tone(1320, 0, .4, "square", .1);
+    teamSound(kind === "rank" ? "full" : kind, who);
   } catch {}
 }
 
 /* ================= BOOT ================= */
+window.fiftyDeep = { celebrate: (s, w) => celebrate(s, null, w), hype: (b, sm, w) => hype(b, sm, w), sound: (k, w) => sfx(k, w) };
 function boot(){
+  applyPlayers(LS.get("fd_players", {}));
   logs = LS.get("fd_logs", {});
   tests = LS.get("fd_tests", {});
   render();
@@ -1058,16 +1587,23 @@ function boot(){
   try {
     const fb = firebase.initializeApp(FIREBASE_CONFIG);
     const fs = fb.firestore();
-    db = fs; dbCol = fs.collection("logs"); testsCol = fs.collection("tests"); shared = true;
+    db = fs; dbCol = fs.collection("logs"); testsCol = fs.collection("tests"); playersCol = fs.collection("players"); shared = true;
   } catch (e) { toast("Couldn't reach the scoreboard. Refresh to try again."); return; }
   logs = {}; tests = {};
-  const idle = () => { const a = document.activeElement; return !(a && a.matches && a.matches(".entry input, #pinIn, #runval")); };
+  const idle = () => { const a = document.activeElement; return !(a && a.matches && a.matches(".entry input, #pinIn, #runval, #npName, #npTeam")); };
   dbCol.onSnapshot(snap => {
     const next = {};
     snap.docs.forEach(doc => { const b = doc.data(); if (b && b.player && b.date) next[b.player+"|"+b.date] = { push:b.push, sit:b.sit, squat:b.squat, rope:b.rope }; });
+    const had = M && booted ? { r: me ? rankOf(me) : null, full: new Set(PIDS().filter(p => M.players[p] && M.players[p].days[M.today] && M.players[p].days[M.today].full)) } : null;
     logs = next;
-    if (idle() && !sheet) render();
+    if (idle() && !sheet){ render(); if (had) liveNews(had); }
+    booted = true;
   }, () => toast("Lost the live connection. Refresh the page."));
+  playersCol.onSnapshot(snap => {
+    const docs = {}; snap.docs.forEach(doc => docs[doc.id] = doc.data());
+    applyPlayers(docs);
+    if (idle() && !sheet && !adding) render();
+  }, () => {});
   testsCol.onSnapshot(snap => {
     const next = {};
     snap.docs.forEach(doc => { const b = doc.data(); if (b && b.player && b.k) next[b.player+"|"+b.k] = { push:b.push||0, sit:b.sit||0, squat:b.squat||0, date:b.date }; });
