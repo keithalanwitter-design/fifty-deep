@@ -1,6 +1,6 @@
 // 50 Deep service worker: offline fallback + daily reminders.
 // Network first so updates show right away; the cache is only a fallback.
-const CACHE = "fifty-deep-v3";
+const CACHE = "fifty-deep-v4";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.png", "./icon-192.png", "./icon-512.png"];
 const BOARD = "https://firestore.googleapis.com/v1/projects/fifty-deep/databases/(default)/documents/status/board?key=AIzaSyBPVyPhfu5XzA_x65X11cG7x_8qQ3kF2Yc";
 
@@ -52,7 +52,8 @@ function compose(board, me){
 self.addEventListener("push", e => {
   e.waitUntil((async () => {
     const [board, me] = await Promise.all([readBoard(), whoAmI()]);
-    const { title, body } = compose(board, me);
+    let { title, body } = compose(board, me);
+    if (new Date().getDay() === 0 || localDate() === "2026-10-22") body += " Your weekly check-in is open on the Family Wall.";
     await self.registration.showNotification(title, { body, icon: "icon-192.png", badge: "icon-192.png", tag: "fifty-deep-daily", renotify: true, data: { url: "./" } });
   })());
 });

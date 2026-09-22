@@ -260,8 +260,36 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 .remind.on b{color:var(--good)}
 .remind.blocked{border-color:rgba(227,38,47,.5);background:linear-gradient(90deg,rgba(227,38,47,.14),var(--panel))}
 .rhelp{margin:8px 0 0;padding-left:18px;font-size:14px;color:#DDE3F0;display:grid;gap:6px}
+/* check-ins + wall */
+.cicard{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px;border-radius:14px;background:linear-gradient(90deg,rgba(255,122,26,.18),var(--panel));border:1px solid rgba(255,122,26,.5)}
+.cicard > div:first-child{flex:1 1 240px}
+.cicard b{display:block;font-family:var(--display);font-weight:900;font-size:22px;text-transform:uppercase;line-height:1;margin-bottom:4px;color:var(--orange-soft)}
+.cicard span{font-size:14px;color:#C9D1E3}
+.cibox{text-align:left;max-height:92vh;overflow:auto;padding:4px 2px 10px}
+.pick:has(.cibox){background:#05080F;align-items:start;overflow:auto}
+.cibox h2{text-align:left;font-size:32px}
+.ciphoto{display:grid;place-items:center;min-height:150px;border:2px dashed var(--line);border-radius:14px;background:var(--panel);cursor:pointer;text-align:center;overflow:hidden}
+.ciphoto span{font-family:var(--display);font-weight:900;font-size:24px;text-transform:uppercase}
+.ciphoto small{display:block;color:var(--mute);font-size:13px}
+.ciphoto img{width:100%;max-height:320px;object-fit:cover;display:block}
+.moods{display:flex;flex-wrap:wrap;gap:6px}
+.mood{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--mute);min-height:36px}
+.mood[aria-pressed="true"]{background:var(--me,var(--orange));border-color:var(--me,var(--orange));color:#fff}
+.cibox textarea.fi{font-size:16px;resize:vertical}
+.wallweek{display:grid;gap:12px}
+.wallweek h3{margin:6px 0 0;font-family:var(--display);font-weight:900;font-size:26px;text-transform:uppercase}
+.post{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--pc);border-radius:14px;padding:14px;display:grid;gap:10px}
+.post .ph{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.post .ph b{font-family:var(--display);font-weight:900;font-size:22px;text-transform:uppercase;color:var(--pcs)}
+.post .ph small{margin-left:auto;color:var(--mute);font-size:12px}
+.post .pimg{width:100%;max-height:420px;object-fit:cover;border-radius:10px}
+.post p{margin:0;font-size:15px;color:#DDE3F0;white-space:pre-wrap}
+.post .q{display:block;font-family:var(--label);text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--mute);font-weight:700;margin-bottom:2px}
+.moodchip{background:var(--pc);border-color:transparent;color:#fff}
+.tabs button{font-size:12px;letter-spacing:.04em}
+@media (max-width:370px){.tabs button{font-size:10.5px;letter-spacing:0;padding:10px 1px;gap:2px}.tabs .tc{padding:0 4px;font-size:10px}}
 /* tabs */
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
 .tabs button{padding:10px 2px;white-space:nowrap;border-radius:9px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:4px}
 .tabs button[aria-selected="true"]{background:var(--ink);color:var(--ground)}
 .tc{font-size:11px;background:var(--orange);color:#1a0d00;border-radius:999px;padding:0 6px;line-height:16px}
@@ -446,7 +474,7 @@ const P = {
   logan:   { id:"logan",   name:"Logan",   team:"Bombers",  color:"bombers",  order:2, joined:SEASON_START },
   scott:   { id:"scott",   name:"Scott",   team:"Gamers",   color:"gamers",   order:3, joined:SEASON_START },
   ezra:    { id:"ezra",    name:"Ezra",    team:"Cyclones", color:"cyclones", order:4, joined:SEASON_START },
-  judah:   { id:"judah",   name:"Judah",   team:"Lions",    color:"lions",    order:5, joined:SEASON_START },
+  judah:   { id:"judah",   name:"Juda",   team:"Lions",    color:"lions",    order:5, joined:SEASON_START },
   nora:    { id:"nora",    name:"Nora",    team:"Cyclones", color:"cycblue",  order:6, joined:SEASON_START }
 };
 const FOUNDERS = new Set(Object.keys(P));
@@ -848,13 +876,15 @@ function render(){
     ${reminderCard()}
 
     <nav class="tabs" role="tablist" aria-label="Sections">
-      ${[["today","Today"],["tests","Max-Out"],["badges","Badges"],["rules","Rules"]].map(([id,l]) => `<button role="tab" data-tab="${id}" aria-selected="${tab===id}">${l}${id==="badges" ? ` <span class="tc">${badgeCount(me||PIDS()[0])}</span>` : ""}${id==="tests" && testDue() ? ` <span class="tc due">!</span>` : ""}</button>`).join("")}
+      ${[["today","Today"],["tests","Max-Out"],["wall","Wall"],["badges","Badges"],["rules","Rules"]].map(([id,l]) => `<button role="tab" data-tab="${id}" aria-selected="${tab===id}">${l}${id==="badges" ? ` <span class="tc">${badgeCount(me||PIDS()[0])}</span>` : ""}${id==="tests" && testDue() ? ` <span class="tc due">!</span>` : ""}${id==="wall" && me && ciOpenWeek() != null && !ciPosted(me, ciOpenWeek()) ? ` <span class="tc due">!</span>` : ""}</button>`).join("")}
     </nav>
 
     ${tab === "today" ? `${me && testDue() && !M.pre ? `<div class="banner test"><span class="tag">1:00</span><div><b>${testDue() === 1 ? "Baseline test first" : `Test ${testDue()} is open`}</b>${testDue() === 1 ? "Before the grind starts, find out where you stand: 1 minute of max push-ups, sit-ups and squats." : "30 days of work. Time to see how much stronger you got."} <button class="linkbtn" data-tab="tests">Go to Max-Out →</button></div></div>` : ""}
+    ${checkinCard()}
     <nav class="strip" aria-label="Days this week">${strip}</nav>
     ${dayHtml}` : ""}
     ${tab === "tests" ? testsHtml() : ""}
+    ${tab === "wall" ? wallHtml() : ""}
     ${tab === "badges" ? badgesHtml() : ""}
     ${tab === "rules" ? `    <section class="rules">
       <h2 class="sech">Game rules</h2>
@@ -870,6 +900,7 @@ function render(){
         <div class="rule"><h4>Comeback day</h4><p>Came up short on a weekday? The next day you get make-up sets (the green bubbles). Finish them on top of your normal 50 and the missed day counts as full again: streak saved, perfect week still alive, and the reps score.</p></div>
         <div class="rule"><h4>Underdog weekend</h4><p>Anyone in the bottom half of the leaderboard on weekday points going into the weekend scores 2x on Saturday and Sunday instead of 1.5x. Nobody gets smoked for long.</p></div>
         <div class="rule"><h4>Tiebreaker: first one done</h4><p>Tied on points? Whoever finished their full day first today ranks higher, then whoever reached that score first. Knock your sets out early and you jump everyone still waiting until tonight.</p></div>
+        <div class="rule"><h4>Family Wall check-ins</h4><p>Every Sunday (and on Day 30), post a photo, how you feel, and a few words about your week. It shows up on the Wall for the whole family, Arkansas and Illinois. The Wall needs the family password to open, and posts are scrambled so nobody outside the family can read them.</p></div>
         <div class="rule"><h4>Winning</h4><p>Most points Monday through Sunday wins the week (a tie at the top is a win for everyone tied). Weekly wins build the season record. Anyone can join mid-season from "+ Add player" and start stacking points that day. Honor system all the way. The real win is showing up every day.</p></div>
       </div>
     </section>` : ""}
@@ -884,6 +915,7 @@ function render(){
     <img src="icon-192.png" alt=""><div class="it"><b>Add to home screen</b><span>One tap to log reps, like an app.</span></div>
     <button class="btn go" id="instGo">Install</button><button class="x" id="instX" aria-label="Not now">✕</button></div>` : ""}
   ${installSheet ? installSheetHtml() : ""}
+  ${ciSheet ? ciSheetHtml() : ""}
   ${remindAsk && me && !picking && !adding ? remindAskHtml() : ""}
   ${pinOpen ? `<div class="pick" role="dialog" aria-modal="true" aria-label="Family PIN"><div class="box">
     <div class="lbl">50 Deep</div><h2>Family PIN</h2>
@@ -892,6 +924,7 @@ function render(){
     <button class="btn go" id="pinGo" style="justify-content:center;font-size:18px;padding:14px">Unlock</button>
     <button class="btn no" id="pinX" style="justify-content:center">Just watching</button></div></div>` : ""}`;
   popAt = null; slamEx = null;
+  if (tab === "wall" && wallKey) wallHtmlAsync();
   if (document.querySelector(".install")) installAnimated = true;
 }
 
@@ -1188,7 +1221,9 @@ function badgeList(p){
     ["sk","1K Sit-ups","1,000 career sit-ups","1K", tot.sit >= 1000],
     ["qk","1K Squats","1,000 career squats","1K", tot.squat >= 1000],
     ["w3","Three-Peat","Win 3 weeks","3W", weekWins >= 3],
-    ["s30","Iron Will","30-day streak","30", pl.best >= 30]
+    ["s30","Iron Will","30-day streak","30", pl.best >= 30],
+    ["ci1","Open Book","Post your first weekly check-in","✎", Object.keys(checkins).some(k => k.startsWith(p + "|"))],
+    ["ciall","Full Journal","Post every weekly check-in","5/5", Array.from({ length: WEEKS_IN_SEASON }, (_, w) => ciPosted(p, w)).every(Boolean)]
   ].map(([id,name,desc,code,earned]) => ({ id, name, desc, code, earned: !!earned }));
 }
 const earnedIds = p => p && M ? new Set(badgeList(p).filter(b => b.earned).map(b => b.id)) : new Set();
@@ -1219,6 +1254,131 @@ function liveNews(had){
     lastRank = r;
   }
   news.slice(0, 2).forEach((n, i) => setTimeout(() => { toast(n); if (i === 0) sfx("down"); }, i * 3500));
+}
+
+/* ================= FAMILY WALL: weekly check-ins ================= */
+// Check-ins are encrypted on the phone with a key made from the family wall password, so the
+// database only ever holds scrambled text. Without the password there is nothing to read.
+const WALL_CHECK = "6673f5dbee130968493a0f4eaf7f27b3bbe9ddae01008c5610564aa81d010caa";   // sha256("fifty-deep-wall:" + password)
+const MOODS = [["rough","Rough"],["okay","Okay"],["good","Good"],["strong","Strong"],["unstoppable","Unstoppable"]];
+const WEEKS_IN_SEASON = weekIdx(SEASON_END) + 1;                 // 5 (Mon–Sun weeks touching the season)
+const ciOpens = w => { const sun = addDays(weekStart(w), 6); return sun > SEASON_END ? SEASON_END : sun; };   // Sunday, or Day 30
+const ciCloses = () => addDays(SEASON_END, 4);
+let checkins = {};            // "keith|1" -> { iv, ct, createdAt, updatedAt }
+let checkinsCol = null;
+let wallKey = null, wallPw = LS.get("fd_wall", "");
+const wallCache = {};         // key|updatedAt -> decrypted object
+let ciSheet = null;           // { w, photo, mood, a, b, c, saving }
+const u8 = s => new TextEncoder().encode(s);
+const toB64 = buf => { let s = ""; const b = new Uint8Array(buf); for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s); };
+const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function sha256hex(s){ const h = await crypto.subtle.digest("SHA-256", u8(s)); return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2,"0")).join(""); }
+async function unlockWall(pw){
+  const norm = (pw || "").trim().toLowerCase();
+  if (!norm || await sha256hex("fifty-deep-wall:" + norm) !== WALL_CHECK) return false;
+  const base = await crypto.subtle.importKey("raw", u8(norm), "PBKDF2", false, ["deriveKey"]);
+  wallKey = await crypto.subtle.deriveKey({ name:"PBKDF2", salt:u8("fifty-deep-wall-v1"), iterations:150000, hash:"SHA-256" }, base, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]);
+  wallPw = norm; LS.set("fd_wall", norm); return true;
+}
+async function sealEntry(obj){ const iv = crypto.getRandomValues(new Uint8Array(12)); const ct = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, wallKey, u8(JSON.stringify(obj))); return { iv: toB64(iv), ct: toB64(ct) }; }
+async function unsealEntry(e){ const pt = await crypto.subtle.decrypt({ name:"AES-GCM", iv: fromB64(e.iv) }, wallKey, fromB64(e.ct)); return JSON.parse(new TextDecoder().decode(pt)); }
+function shrinkPhoto(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => { const max = 900, k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+      let q = .72, out = c.toDataURL("image/jpeg", q); while (out.length > 520000 && q > .35){ q -= .1; out = c.toDataURL("image/jpeg", q); }
+      res(out); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("That photo couldn't be opened. Try a different one.")); };
+    img.src = url;
+  });
+}
+// which week's check-in is open for me right now (latest open week I haven't posted), or null
+function ciOpenWeek(){
+  const t = todayStr(); if (t > ciCloses()) return null;
+  let open = null; for (let w = 0; w < WEEKS_IN_SEASON; w++) if (t >= ciOpens(w)) open = w;
+  return open;
+}
+const ciPosted = (p, w) => !!checkins[p + "|" + (w + 1)];
+function checkinCard(){
+  if (!me) return "";
+  const w = ciOpenWeek(); if (w == null || ciPosted(me, w)) return "";
+  const last = w === WEEKS_IN_SEASON - 1;
+  return `<section class="cicard"><div><b>${last ? "Final check-in" : `Week ${w+1} check-in`} is open</b><span>${last ? "30 days done. One photo and a few words about how you've grown." : "Add a photo, how you feel, and a few words about your week. The family sees it on the Wall."}</span></div>
+    <div class="rbtns"><button class="btn go" data-ci="${w}">Post my check-in</button></div></section>`;
+}
+function ciSheetHtml(){
+  const s = ciSheet, last = s.w === WEEKS_IN_SEASON - 1;
+  return `<div class="pick" role="dialog" aria-modal="true" aria-label="Weekly check-in"><div class="box cibox">
+    <div class="lbl">${esc(P[me].name)} · ${last ? "Final" : `Week ${s.w+1}`} check-in</div>
+    <h2>${last ? "How did 30 days change you?" : "How was your week?"}</h2>
+    <label class="ciphoto" for="ciFile">${s.photo ? `<img src="${s.photo}" alt="Your check-in photo">` : `<span>＋ Add a photo</span><small>A post-workout pic, a selfie, anything</small>`}</label>
+    <input id="ciFile" type="file" accept="image/*" hidden>
+    <div class="fl">How do you feel?</div>
+    <div class="moods">${MOODS.map(([k,l]) => `<button class="mood" data-mood="${k}" aria-pressed="${s.mood===k}">${l}</button>`).join("")}</div>
+    <label class="fl" for="ciA">${last ? "What changed over the 30 days?" : "How did the week go?"}</label><textarea class="fi" id="ciA" maxlength="600" rows="3" placeholder="Wins, tough days, what surprised you…">${esc(s.a)}</textarea>
+    <label class="fl" for="ciB">How do you feel about yourself right now?</label><textarea class="fi" id="ciB" maxlength="600" rows="2" placeholder="Stronger? More disciplined? Honest answer.">${esc(s.b)}</textarea>
+    <label class="fl" for="ciC">Overall thoughts</label><textarea class="fi" id="ciC" maxlength="600" rows="2" placeholder="Anything for the family…">${esc(s.c)}</textarea>
+    <button class="btn go" id="ciSave" style="justify-content:center;font-size:18px;padding:14px" ${s.saving ? "disabled" : ""}>${s.saving ? "Posting…" : "Post to the Family Wall"}</button>
+    <button class="btn no" id="ciCancel" style="justify-content:center">Not now</button></div></div>`;
+}
+function ciGrab(){ const g = id => (document.getElementById(id) || {}).value; if (!ciSheet) return; ciSheet.a = g("ciA") ?? ciSheet.a; ciSheet.b = g("ciB") ?? ciSheet.b; ciSheet.c = g("ciC") ?? ciSheet.c; }
+async function saveCheckin(){
+  ciGrab(); const s = ciSheet;
+  if (!s.mood && !s.a.trim() && !s.photo){ toast("Add a photo, pick how you feel, or write a few words first."); return; }
+  if (!wallKey && !(await unlockWall(wallPw || "witter2026"))) { toast("Couldn't lock the check-in. Try again."); return; }
+  s.saving = true; render();
+  try {
+    const sealed = await sealEntry({ mood: s.mood || "", a: s.a.trim(), b: s.b.trim(), c: s.c.trim(), photo: s.photo || "" });
+    const week = s.w + 1, now = Date.now(), prev = checkins[me + "|" + week];
+    const doc = { player: me, week, iv: sealed.iv, ct: sealed.ct, createdAt: prev ? prev.createdAt : now, updatedAt: now };
+    if (sealed.ct.length > 950000) throw new Error("big");
+    checkins[me + "|" + week] = doc;
+    if (shared) await checkinsCol.doc(`${me}_w${week}`).set(doc); else LS.set("fd_checkins", checkins);
+    const b0 = earnedIds(me);
+    ciSheet = null; tab = "wall"; LS.set("fd_tab", tab); render();
+    celebrate("big"); sfx("full"); hype("Posted", `${week === WEEKS_IN_SEASON ? "Final" : "Week " + week} check-in on the Wall`);
+    announceBadges(b0);
+  } catch (e){ s.saving = false; render(); toast(e && e.message === "big" ? "That photo is too large. Try another one." : "Couldn't post just now. Check your connection and try again."); }
+}
+async function wallHtmlAsync(){
+  // decrypt everything we have, then paint the wall (called after render when the Wall tab is open)
+  const box = document.getElementById("wallBody"); if (!box || !wallKey) return;
+  const entries = await Promise.all(Object.entries(checkins).map(async ([k, e]) => {
+    const ck = k + "|" + e.updatedAt;
+    if (!wallCache[ck]) { try { wallCache[ck] = await unsealEntry(e); } catch { wallCache[ck] = { error: true }; } }
+    return [k, e, wallCache[ck]];
+  }));
+  const byWeek = {};
+  entries.forEach(([k, e, d]) => { (byWeek[e.week] = byWeek[e.week] || []).push([k.split("|")[0], e, d]); });
+  const weeks = Object.keys(byWeek).map(Number).sort((a,b) => b - a);
+  const moodLbl = Object.fromEntries(MOODS);
+  box.innerHTML = weeks.length ? weeks.map(wk => {
+    const posted = byWeek[wk].sort((a,b) => b[1].updatedAt - a[1].updatedAt);
+    const missing = PIDS().filter(p => !ciPosted(p, wk - 1) && (P[p].joined || SEASON_START) <= ciOpens(wk - 1));
+    return `<section class="wallweek"><h3>${wk === WEEKS_IN_SEASON ? "Final check-in" : `Week ${wk}`}</h3>
+      ${posted.map(([p, e, d]) => { const c = pc(p);
+        if (d.error) return `<article class="post" style="--pc:${c.hex}"><div class="ph"><b>${esc(P[p] ? P[p].name : p)}</b></div><p class="locked">This post couldn't be unlocked.</p></article>`;
+        return `<article class="post" style="--pc:${c.hex};--pcs:${c.soft}">
+          <div class="ph"><span class="emb" style="color:${c.hex}">${emblem(c.icon, 26)}</span><b>${esc(P[p] ? P[p].name : p)}</b>${d.mood ? `<span class="chip moodchip">${esc(moodLbl[d.mood] || d.mood)}</span>` : ""}<small>${new Date(e.updatedAt).toLocaleDateString([], { weekday:"short", month:"short", day:"numeric" })}</small></div>
+          ${d.photo ? `<img class="pimg" src="${d.photo}" alt="${esc(P[p] ? P[p].name : p)}'s check-in photo" loading="lazy">` : ""}
+          ${d.a ? `<p><span class="q">The week</span>${esc(d.a)}</p>` : ""}${d.b ? `<p><span class="q">How I feel about myself</span>${esc(d.b)}</p>` : ""}${d.c ? `<p><span class="q">Overall</span>${esc(d.c)}</p>` : ""}
+          ${p === me ? `<button class="linkbtn" data-ciedit="${wk - 1}">Edit my check-in</button>` : ""}
+        </article>`; }).join("")}
+      ${missing.length ? `<p class="locked">Still waiting on: ${missing.map(p => esc(P[p].name)).join(", ")}</p>` : ""}
+    </section>`; }).join("") : `<p class="intro">No check-ins yet. The first one opens ${fmtDate(ciOpens(0))}.</p>`;
+}
+function wallHtml(){
+  const w = ciOpenWeek();
+  const head = `<h2 class="sech">Family Wall</h2><p class="intro">Every Sunday, everyone posts a photo and a few words about their week. Arkansas and Illinois, one wall. Only people with the family password can see it.</p>`;
+  if (!wallKey) return `<section class="rules">${head}
+    <div class="tcard"><label class="fl" for="wallPw">Family Wall password</label>
+      <div class="pin" style="justify-content:flex-start"><input id="wallPw" type="password" autocomplete="off" autocapitalize="none" placeholder="Password" style="width:100%;letter-spacing:.08em;font-size:22px;text-align:left"></div>
+      <button class="btn go" id="wallGo" style="justify-content:center;padding:12px">Open the Wall</button></div></section>`;
+  return `<section class="rules">${head}
+    ${me && w != null ? (ciPosted(me, w) ? "" : `<button class="btn go" data-ci="${w}" style="justify-content:center;padding:12px">Post my ${w === WEEKS_IN_SEASON - 1 ? "final" : `Week ${w+1}`} check-in</button>`) : ""}
+    <div id="wallBody"><p class="locked">Loading the wall…</p></div></section>`;
 }
 
 /* ================= PLAYERS ================= */
@@ -1326,6 +1486,15 @@ app.addEventListener("click", ev => {
     render(); syncPushPlayer(); return; }
   if (t.id === "askYes"){ remindAsk = false; LS.set("fd_asked", true); if (pushNeedsInstall() || !pushSupported()){ installSheet = true; render(); } else { render(); enablePush(); } return; }
   if (t.id === "askNo"){ remindAsk = false; LS.set("fd_asked", true); render(); return; }
+  if (t.dataset.ci != null || t.dataset.ciedit != null){ if (!pinOK){ pinOpen = true; render(); return; }
+    const w = +(t.dataset.ci ?? t.dataset.ciedit), prev = checkins[me + "|" + (w + 1)];
+    ciSheet = { w, photo:"", mood:"", a:"", b:"", c:"", saving:false };
+    if (prev && wallKey) unsealEntry(prev).then(d => { if (ciSheet && ciSheet.w === w){ Object.assign(ciSheet, { photo:d.photo||"", mood:d.mood||"", a:d.a||"", b:d.b||"", c:d.c||"" }); render(); } }).catch(() => {});
+    render(); return; }
+  if (t.dataset.mood){ ciGrab(); ciSheet.mood = ciSheet.mood === t.dataset.mood ? "" : t.dataset.mood; render(); return; }
+  if (t.id === "ciSave"){ saveCheckin(); return; }
+  if (t.id === "ciCancel"){ ciSheet = null; render(); return; }
+  if (t.id === "wallGo"){ const v = document.getElementById("wallPw").value; unlockWall(v).then(ok => { if (ok){ render(); toast("Welcome to the Family Wall."); } else { toast("That's not the family password."); sfx("down"); } }); return; }
   if (t.id === "pushOn"){ enablePush(); return; }
   if (t.id === "pushUnhide"){ LS.set("fd_push_hide", false); render(); const c = document.querySelector(".remind"); c && c.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
   if (t.id === "pushHide"){ LS.set("fd_push_hide", true); render(); return; }
@@ -1363,7 +1532,14 @@ app.addEventListener("click", ev => {
   if (t.id === "tstart"){ startTimer(t); return; }
   if (t.dataset.close && (ev.target === t || t.tagName === "BUTTON")){ stopTimer(); sheet = null; render(); return; }
 });
+app.addEventListener("change", ev => {
+  if (ev.target.id === "ciFile" && ev.target.files && ev.target.files[0] && ciSheet){
+    ciGrab(); const f = ev.target.files[0];
+    shrinkPhoto(f).then(d => { if (ciSheet){ ciSheet.photo = d; render(); } }).catch(e => toast(e.message));
+  }
+});
 app.addEventListener("keydown", ev => {
+  if (ev.key === "Enter" && ev.target.id === "wallPw"){ document.getElementById("wallGo").click(); return; }
   if (ev.key === "Enter" && (ev.target.id === "npName" || ev.target.id === "npTeam")){ addPlayer(); return; }
   if (ev.key === "Enter" && ev.target.id === "pinIn"){ document.getElementById("pinGo").click(); return; }
   if (ev.key === "Enter" && ev.target.matches(".entry input")){ const id = ev.target.id.slice(3); document.querySelector(`[data-save="${id}"]`).click(); }
@@ -1773,8 +1949,9 @@ function reminderCard(){
     <div class="rbtns"><button class="btn go" id="instLink">Add to home screen</button></div></section>` : "";
   if (pushOn()) return `<section class="remind on"><div><b>Reminders on ✓</b><span>7:00 AM game plan · 5:30 PM check-in · 8:45 PM last call if you're not done.</span></div>
     <div class="rbtns"><button class="btn go" id="pushTest">Send a test</button><button class="btn no" id="pushOff">Turn off</button></div></section>`;
+  if (pushPerm() === "denied" && LS.get("fd_push_hide", false)) return "";
   if (pushPerm() === "denied") return `<section class="remind blocked"><div><b>Reminders are blocked</b><span>Your ${isIOS || isAndroid ? "phone" : "browser"} said no to notifications for 50 Deep. Here's how to fix it:</span>${help}</div>
-    <div class="rbtns"><button class="btn go" id="pushOn">Try again</button></div></section>`;
+    <div class="rbtns"><button class="btn go" id="pushOn">Try again</button><button class="btn no" id="pushHide">Hide</button></div></section>`;
   if (LS.get("fd_push_hide", false)) return "";
   return `<section class="remind"><div><b>Daily reminders</b><span>A game plan at 7:00 AM, a check-in at 5:30 PM, and a last call at 8:45 PM if you're not done. Personal to your spot on the board.</span></div>
     <div class="rbtns"><button class="btn go" id="pushOn">${pushNeedsInstall() ? "Add to home screen first" : "Turn on reminders"}</button><button class="btn no" id="pushHide">Not now</button></div></section>`;
@@ -1801,6 +1978,8 @@ function boot(){
   applyPlayers(LS.get("fd_players", {}));
   logs = LS.get("fd_logs", {});
   tests = LS.get("fd_tests", {});
+  checkins = LS.get("fd_checkins", {});
+  if (wallPw) unlockWall(wallPw).then(ok => { if (ok && tab === "wall") render(); });
   render();
   if (!window.firebase) { toast("Couldn't reach the scoreboard. Check your connection and refresh."); return; }
   try {
@@ -1809,7 +1988,7 @@ function boot(){
     db = fs; dbCol = fs.collection("logs"); testsCol = fs.collection("tests"); playersCol = fs.collection("players"); shared = true;
   } catch (e) { toast("Couldn't reach the scoreboard. Refresh to try again."); return; }
   logs = {}; tests = {};
-  const idle = () => { const a = document.activeElement; return !(a && a.matches && a.matches(".entry input, #pinIn, #runval, #npName, #npTeam")); };
+  const idle = () => { const a = document.activeElement; return !(a && a.matches && a.matches(".entry input, #pinIn, #runval, #npName, #npTeam, #wallPw, .cibox textarea")) && !ciSheet; };
   dbCol.onSnapshot(snap => {
     const next = {};
     snap.docs.forEach(doc => { const b = doc.data(); if (b && b.player && b.date) next[b.player+"|"+b.date] = { push:b.push, sit:b.sit, squat:b.squat, rope:b.rope, gainAt:b.gainAt || 0, fullAt:b.fullAt || 0 }; });
@@ -1819,6 +1998,13 @@ function boot(){
     if (!booted) setTimeout(() => { publishBoard(); syncPushPlayer(); }, 3000);
     booted = true;
   }, () => toast("Lost the live connection. Refresh the page."));
+  checkinsCol = fs.collection("checkins");
+  checkinsCol.onSnapshot(snap => {
+    const next = {};
+    snap.docs.forEach(doc => { const b = doc.data(); if (b && b.player && b.week && b.week <= WEEKS_IN_SEASON && b.ct) next[b.player+"|"+b.week] = { iv:b.iv, ct:b.ct, createdAt:b.createdAt || 0, updatedAt:b.updatedAt || 0, week:b.week }; });
+    checkins = next;
+    if (idle()) render();
+  }, () => {});
   playersCol.onSnapshot(snap => {
     const docs = {}; snap.docs.forEach(doc => docs[doc.id] = doc.data());
     applyPlayers(docs);
