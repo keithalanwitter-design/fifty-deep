@@ -436,7 +436,13 @@ const SEASON_END = "2026-10-22";              // Thursday: Day 30 (championship 
 const WEEK0 = "2026-09-21";                   // Monday of the tip-off week; weeks run Mon–Sun
 const HOT_BONUS = [100, 150, 200];           // flat bonus for 1st, 2nd, 3rd+ perfect week in a row
 const TEST_EVERY = 30;                        // days between max-out tests
-const TEST_PTS = 5;                           // points per rep improved over your last test
+const TEST_PTS = 5;
+const TEST_SECS = 120;                          // 2-minute max-out: pace yourself, good-form reps only
+const TEST_RULES = {
+  push:  "Chest near the floor, arms locked at the top, body straight. Rest only in the top position. Knees down ends the test.",
+  sit:   "Shoulders all the way up, back all the way down. Rest only lying down. Don't yank your neck.",
+  squat: "Thighs parallel to the floor, heels down, stand all the way tall at the top. Rest only standing."
+};                           // points per rep improved over your last test
 const TEST_EX = ["push","sit","squat"];
 const LOGO_MARK = "data:image/webp;base64,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";
 // Keith's own Storm Basketball logo (used with permission of its owner).
@@ -779,7 +785,7 @@ function render(){
       <div class="lbl">${esc(P[me].team || "")} · Pre-season</div>
       <h2>Tip-off ${fmtDate(SEASON_START)}</h2>
       <p>Starting Wednesday, every day is 50 push-ups, 50 sit-ups, 50 squats and 5 minutes of rope, in sets of 10. Weekends are uncapped and score 1.5x. The season runs 30 days and ends ${fmtDate(SEASON_END)}.</p>
-      <div class="prestep ${done1 ? "ok" : ""}"><b>${done1 ? "✓" : "1"}</b><span>${done1 ? "Baseline test done. That's your number to beat on Day 30." : "Do your baseline max-out test: 1 minute each of push-ups, sit-ups and squats."}</span>${done1 ? "" : `<button class="btn go" data-tab="tests">Start test →</button>`}</div>
+      <div class="prestep ${done1 ? "ok" : ""}"><b>${done1 ? "✓" : "1"}</b><span>${done1 ? "Baseline test done. That's your number to beat on Day 30." : "Do your baseline max-out test: 2 minutes each of push-ups, sit-ups and squats."}</span>${done1 ? "" : `<button class="btn go" data-tab="tests">Start test →</button>`}</div>
       <div class="prestep"><b>2</b><span>Add the site to your home screen so it's one tap away.</span></div>
       <div class="prestep"><b>3</b><span>Tell the family: ${PIDS().length} players, one leaderboard.</span></div>
     </section>`;
@@ -880,7 +886,7 @@ function render(){
       ${[["today","Today"],["tests","Max-Out"],["wall","Wall"],["badges","Badges"],["rules","Rules"]].map(([id,l]) => `<button role="tab" data-tab="${id}" aria-selected="${tab===id}">${l}${id==="badges" ? ` <span class="tc">${badgeCount(me||PIDS()[0])}</span>` : ""}${id==="tests" && testDue() ? ` <span class="tc due">!</span>` : ""}${id==="wall" && me && ciOpenWeek() != null && !ciPosted(me, ciOpenWeek()) ? ` <span class="tc due">!</span>` : ""}</button>`).join("")}
     </nav>
 
-    ${tab === "today" ? `${me && testDue() && !M.pre ? `<div class="banner test"><span class="tag">1:00</span><div><b>${testDue() === 1 ? "Baseline test first" : `Test ${testDue()} is open`}</b>${testDue() === 1 ? "Before the grind starts, find out where you stand: 1 minute of max push-ups, sit-ups and squats." : "30 days of work. Time to see how much stronger you got."} <button class="linkbtn" data-tab="tests">Go to Max-Out →</button></div></div>` : ""}
+    ${tab === "today" ? `${me && testDue() && !M.pre ? `<div class="banner test"><span class="tag">2:00</span><div><b>${testDue() === 1 ? "Baseline test first" : `Test ${testDue()} is open`}</b>${testDue() === 1 ? "Before the grind starts, find out where you stand: 2 minutes each of max push-ups, sit-ups and squats." : "30 days of work. Time to see how much stronger you got."} <button class="linkbtn" data-tab="tests">Go to Max-Out →</button></div></div>` : ""}
     ${checkinCard()}
     <nav class="strip" aria-label="Days this week">${strip}</nav>
     ${dayHtml}` : ""}
@@ -897,7 +903,7 @@ function render(){
         <div class="rule"><h4>Streak</h4><p>Hit all four goals on a weekday and your streak grows. Weekends are bonus: a full weekend day adds to the streak, a skipped one never breaks it.</p></div>
         <div class="rule"><h4>Hot streak bonus</h4><p>Go a perfect week (all 5 weekdays full, make-ups count) and you bank a flat bonus on that week's score. Stack perfect weeks back to back and the bonus grows. Miss one and it starts over at +100. It's a flat bonus, not a multiplier, so one rough week never leaves anybody out of reach.</p>
           <div class="ladder">${HOT_BONUS.map((h,i) => `<span class="chip heat">${["1st","2nd","3rd+"][i]} week +${h}</span>`).join("")}</div></div>
-        <div class="rule"><h4>Max-out tests</h4><p>Two tests: a baseline before tip-off and a final on Day 30. One minute of max push-ups, sit-ups and squats each, good form only. The final pays ${TEST_PTS} points for every rep you beat your baseline by. This is where you see the work paying off.</p></div>
+        <div class="rule"><h4>Max-out tests</h4><p>Two tests: a baseline before tip-off and a final on Day 30. Two minutes each of max push-ups, sit-ups and squats. Pace yourself: you can rest, and only good-form reps count. The final pays ${TEST_PTS} points for every rep you beat your baseline by. This is where you see the work paying off.</p></div>
         <div class="rule"><h4>Comeback day</h4><p>Came up short on a weekday? The next day you get make-up sets (the green bubbles). Finish them on top of your normal 50 and the missed day counts as full again: streak saved, perfect week still alive, and the reps score.</p></div>
         <div class="rule"><h4>Underdog weekend</h4><p>Anyone in the bottom half of the leaderboard on weekday points going into the weekend scores 2x on Saturday and Sunday instead of 1.5x. Nobody gets smoked for long.</p></div>
         <div class="rule"><h4>Tiebreaker: first one done</h4><p>Tied on points? Whoever finished their full day first today ranks higher, then whoever reached that score first. Knock your sets out early and you jump everyone still waiting until tonight.</p></div>
@@ -1100,13 +1106,13 @@ function testsHtml(){
   const prevMine = me && K > 1 ? (tests[me+"|"+(K-1)] || {}) : null;
   let h = `<section class="tcard" style="background:transparent;border:0;padding:0">
     <h2 class="sech">Max-Out Tests</h2>
-    <p class="intro">One minute each, all-out, good form only. Bad-form reps don't count, and the honor system says so. Rest 2–3 minutes between exercises. The first test is your baseline, then you retest on Day 30 to see how much stronger 30 days made you. The final pays ${TEST_PTS} points for each rep you beat your last test by.</p></section>`;
+    <p class="intro">Two minutes each. Pace yourself: you can rest, but only good-form reps count, and the honor system says so. Don't sprint, because the clean rep wins. Rest 3–5 minutes between exercises. The first test is your baseline, then you retest on Day 30 to see how much stronger 30 days made you. The final pays ${TEST_PTS} points for each rep you beat your last test by.</p></section>`;
   if (me){
     h += `<section class="tcard open"><div class="thead"><h3>${P[me].name}: Test ${K}</h3><span class="lbl">${testLabel(K)} · open now</span></div>
       ${TEST_EX.map(id => { const e = EX.find(z => z.id === id), v = mine[id] || 0, pv = prevMine ? prevMine[id] || 0 : 0;
         return `<div class="trow"><div><div class="tn">${e.name}</div>${v && prevMine && pv ? `<span class="up ${v < pv ? "dn" : ""}">${v >= pv ? "+" : ""}${v - pv} vs last test</span>` : prevMine && pv ? `<span class="locked">Last test: ${pv}</span>` : ""}</div>
           <div class="tv ${v ? "" : "none"}">${v || "—"}</div>
-          <button class="btn ${v ? "" : "go"}" data-run="${id}">${v ? "Redo" : "Run 1:00"}</button></div>`; }).join("")}
+          <button class="btn ${v ? "" : "go"}" data-run="${id}">${v ? "Redo" : "Run 2:00"}</button></div>`; }).join("")}
       ${K === 1 ? `<div class="locked">The Day 30 final opens ${parse(SEASON_END).toLocaleDateString(undefined,{month:"short",day:"numeric"})}, in ${daysBetween(today, SEASON_END)} day${daysBetween(today, SEASON_END) === 1 ? "" : "s"}. Beat your baseline for bonus points.</div>` : `<div class="locked">This is it. Leave everything on the floor.</div>`}
     </section>`;
   }
@@ -1119,7 +1125,7 @@ function testsHtml(){
       return `<tr><td><span class="pdot" style="background:${pc(id).hex}"></span>${esc(P[id].name)}</td>${TEST_EX.map(cell).join("")}${k > 1 ? `<td>${g ? "+"+g.gain : "—"}</td>` : ""}</tr>`;
     }).join("");
     h += `<section class="tcard"><div class="thead"><h3>Test ${k}</h3><span class="lbl">${testLabel(k)} · ${parse(testOpens(k)).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span></div>
-      <div style="overflow-x:auto"><table class="cmp"><thead><tr><th scope="col">1 minute</th><th scope="col">Push</th><th scope="col">Sit</th><th scope="col">Squat</th>${k > 1 ? `<th scope="col">Bonus</th>` : ""}</tr></thead><tbody>
+      <div style="overflow-x:auto"><table class="cmp"><thead><tr><th scope="col">2 minutes</th><th scope="col">Push</th><th scope="col">Sit</th><th scope="col">Squat</th>${k > 1 ? `<th scope="col">Bonus</th>` : ""}</tr></thead><tbody>
       ${rows}
       </tbody></table></div>${k > 1 ? `<div class="locked">Green numbers are reps gained over each person's baseline.</div>` : ""}</section>`;
   }
@@ -1129,7 +1135,7 @@ function testsHtml(){
 /* runner: full-screen 1-minute test */
 let run = null;
 function openRunner(exId){
-  run = { k: openTestK(), ex: exId, phase: "ready", count: 0, left: 60, iv: null };
+  run = { k: openTestK(), ex: exId, phase: "ready", count: 0, left: TEST_SECS, iv: null };
   let el = document.getElementById("runner");
   if (!el){ el = document.createElement("div"); el.id = "runner"; el.className = "runner"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); document.body.appendChild(el);
     el.addEventListener("click", runnerClick); el.addEventListener("pointerdown", ev => { if (ev.target.closest(".pad") && run && run.phase === "go"){ run.count++; sfx("tap"); buzz(8); const c = el.querySelector(".pad .c"); if (c) c.textContent = run.count; } }); }
@@ -1141,14 +1147,16 @@ function drawRunner(){
   const prev = run.k > 1 ? (tests[me+"|"+(run.k-1)] || {})[run.ex] : 0;
   let body = "";
   if (run.phase === "ready") body = `
-    <div class="lbl">Test ${run.k} · ${testLabel(run.k)}</div><div class="rt">${e.name}<br>1 minute max</div>
-    <div class="clock">1:00</div>
-    <p class="cue">${esc(e.cues[1])} ${prev ? `Number to beat: <b>${prev}</b>.` : ""}</p>
+    <div class="lbl">Test ${run.k} · ${testLabel(run.k)}</div><div class="rt">${e.name}<br>2 minute max</div>
+    <div class="clock">2:00</div>
+    <p class="cue"><b>Counts only if:</b> ${esc(TEST_RULES[run.ex] || e.cues[1])} ${prev ? `Number to beat: <b>${prev}</b>.` : ""}</p>
+    <p class="cue">Pace yourself. Resting is allowed. A slow clean rep beats a fast sloppy one.</p>
     <p class="cue" style="color:var(--mute)">A partner can tap the big pad for every rep, or just type your count when the clock hits zero.</p>
     <div class="row2"><button class="btn go" data-r="start" style="font-size:18px;padding:16px">Start · 3, 2, 1</button></div>
     <div class="row2"><button class="btn" data-r="manual">Just enter my count</button><button class="btn no" data-r="cancel">Cancel</button></div>`;
   else if (run.phase === "count") body = `<div class="rt">${e.name}</div><div class="clock warn">${run.left}</div><p class="cue">Get set. Form first.</p>`;
   else if (run.phase === "go") body = `<div class="rt">${e.name}</div><div class="clock ${run.left <= 10 ? "warn" : ""}">${mm}</div>
+    <p class="cue" style="margin:0">${run.left > 60 ? "Pace yourself. Clean reps only." : run.left > 20 ? "Halfway. Stay clean, keep moving." : "Finish strong. Form still counts."}</p>
     <button class="pad" aria-label="Tap for each rep"><span class="lbl">Tap each rep</span><span class="c">${run.count}</span></button>
     <div class="row2"><button class="btn no" data-r="stop">Stop early</button></div>`;
   else body = `<div class="lbl">Time</div><div class="rt">${e.name}: how many?</div>
@@ -1164,13 +1172,14 @@ function runnerClick(ev){
   const a = b.dataset.r;
   if (a === "cancel"){ closeRunner(); return; }
   if (a === "manual"){ run.phase = "done"; drawRunner(); return; }
-  if (a === "redo"){ clearInterval(run.iv); run.phase = "ready"; run.count = 0; run.left = 60; drawRunner(); return; }
+  if (a === "redo"){ clearInterval(run.iv); run.phase = "ready"; run.count = 0; run.left = TEST_SECS; drawRunner(); return; }
   if (a === "start"){
     run.phase = "count"; run.left = 3; drawRunner(); sfx("beep");
     run.iv = setInterval(() => {
-      if (run.phase === "count"){ run.left--; if (run.left > 0){ sfx("beep"); drawRunner(); } else { run.phase = "go"; run.left = 60; sfx("go"); buzz(60); drawRunner(); } return; }
+      if (run.phase === "count"){ run.left--; if (run.left > 0){ sfx("beep"); drawRunner(); } else { run.phase = "go"; run.left = TEST_SECS; sfx("go"); buzz(60); drawRunner(); } return; }
       run.left--;
       const c = document.querySelector("#runner .clock"); if (c){ c.textContent = `${Math.floor(run.left/60)}:${pad(run.left%60)}`; c.classList.toggle("warn", run.left <= 10); }
+      if (run.left === 60 || run.left === 20){ drawRunner(); sfx("beep"); }
       if (run.left <= 3 && run.left > 0) sfx("beep");
       if (run.left <= 0){ clearInterval(run.iv); run.phase = "done"; sfx("full"); buzz([80,60,80]); drawRunner(); }
     }, 1000);
@@ -1188,7 +1197,7 @@ function runnerClick(ev){
     celebrate("mid"); sfx("done");
     const e = EX.find(z => z.id === ex);
     if (prev && n > prev) hype(`+${n - prev}`, `${e.name} · +${(n-prev)*TEST_PTS} pts`);
-    else hype(`${n}`, `${e.name} in 1 minute${k === 1 ? " · baseline set" : ""}`);
+    else hype(`${n}`, `${e.name} in 2 minutes${k === 1 ? " · baseline set" : ""}`);
     announceBadges(b0);
   }
 }
