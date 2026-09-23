@@ -259,6 +259,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 .remind.on{background:linear-gradient(90deg,rgba(52,210,123,.16),var(--panel));border-color:rgba(52,210,123,.45)}
 .remind.on b{color:var(--good)}
 .remind.blocked{border-color:rgba(227,38,47,.5);background:linear-gradient(90deg,rgba(227,38,47,.14),var(--panel))}
+.rhelp b{display:inline;font-family:var(--body);font-size:inherit;font-weight:700;text-transform:none;letter-spacing:0;margin:0;line-height:inherit;color:#fff}
 .rhelp{margin:8px 0 0;padding-left:18px;font-size:14px;color:#DDE3F0;display:grid;gap:6px}
 /* check-ins + wall */
 .cicard{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px;border-radius:14px;background:linear-gradient(90deg,rgba(255,122,26,.18),var(--panel));border:1px solid rgba(255,122,26,.5)}
@@ -286,11 +287,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline
 .post p{margin:0;font-size:15px;color:#DDE3F0;white-space:pre-wrap}
 .post .q{display:block;font-family:var(--label);text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--mute);font-weight:700;margin-bottom:2px}
 .moodchip{background:var(--pc);border-color:transparent;color:#fff}
-.tabs button{font-size:12px;letter-spacing:.04em}
-@media (max-width:370px){.tabs button{font-size:10.5px;letter-spacing:0;padding:10px 1px;gap:2px}.tabs .tc{padding:0 4px;font-size:10px}}
 /* tabs */
 .tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
-.tabs button{padding:10px 2px;white-space:nowrap;border-radius:9px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:4px}
+.tabs button{position:relative;padding:7px 2px 6px;min-width:0;border-radius:9px;font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:11px;color:var(--mute);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;line-height:1}
+.tabs .tl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabs .tdot{position:absolute;top:5px;right:calc(50% - 16px);width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 2px var(--panel)}
+.tabs .tnum{position:absolute;top:3px;right:calc(50% - 22px);font-style:normal;font-size:10px;min-width:16px;line-height:16px;padding:0 4px;border-radius:999px;background:var(--orange);color:#1a0d00;text-align:center;box-shadow:0 0 0 2px var(--panel)}
+.tabs button[aria-selected="true"] .tdot,.tabs button[aria-selected="true"] .tnum{box-shadow:0 0 0 2px var(--ink)}
 .tabs button[aria-selected="true"]{background:var(--ink);color:var(--ground)}
 .tc{font-size:11px;background:var(--orange);color:#1a0d00;border-radius:999px;padding:0 6px;line-height:16px}
 .tc.due{background:var(--good);color:#032012}
@@ -743,6 +746,7 @@ function render(){
   const firstDone = ids.filter(p => M.players[p].fullAtToday).sort((a,b) => M.players[a].fullAtToday - M.players[b].fullAtToday)[0];
   const clock = ts => new Date(ts).toLocaleTimeString([], { hour:"numeric", minute:"2-digit" });
   let rank = 0;
+  const allZero = order.every(p => ptsOf(p) === 0) && !order.some(p => M.players[p].lastGain);
   const compact = !lbAll && order.length > 4;
   const shown = new Set(compact ? order.slice(0, 3).concat(me ? [me] : []) : order);
   const lbRows = order.map((p, i) => {
@@ -754,7 +758,7 @@ function render(){
     const mini = EX.map(e => { const pct = Math.min(100, x.v[e.id] / e.target * 100);
       return `<i title="${e.name}: ${x.v[e.id]}${e.unit==="min" ? " min" : ""}"><b style="width:${pct}%"></b></i>`; }).join("");
     return `<li class="lbrow ${p === me ? "me" : ""} ${rank === 1 && pts > 0 ? "lead" : ""} ${x.full ? "fullday" : ""}" style="--pc:${c.hex};--pcs:${c.soft};--pcd:${c.deep};--pca:${c.alt}">
-      <span class="rk">${rank}</span>
+      <span class="rk">${allZero ? "–" : rank}</span>
       <div class="lbmain">
         <div class="nm"><span class="emb" style="color:${c.hex}">${emblem(c.icon, 22)}</span>${esc(P[p].name)}${P[p].team ? `<small>${esc(P[p].team)}</small>` : ""}${p === me ? `<small class="you">you</small>` : ""}</div>
         <div class="mini" aria-label="${selDate === today ? "Today" : DNL[dow(selDate)]}: ${EX.map(e => e.short + " " + x.v[e.id]).join(", ")}">${mini}</div>
@@ -880,14 +884,16 @@ function render(){
 
     ${seasonBar()}
     ${me ? coachLine() : ""}
-    ${reminderCard()}
 
     <nav class="tabs" role="tablist" aria-label="Sections">
-      ${[["today","Today"],["tests","Max-Out"],["wall","Wall"],["badges","Badges"],["rules","Rules"]].map(([id,l]) => `<button role="tab" data-tab="${id}" aria-selected="${tab===id}">${l}${id==="badges" ? ` <span class="tc">${badgeCount(me||PIDS()[0])}</span>` : ""}${id==="tests" && testDue() ? ` <span class="tc due">!</span>` : ""}${id==="wall" && me && ciOpenWeek() != null && !ciPosted(me, ciOpenWeek()) ? ` <span class="tc due">!</span>` : ""}</button>`).join("")}
+      ${[["today","Today","M4 7h16M4 12h16M4 17h10"],["tests","Max-Out","M12 3v3M5 9a7 7 0 1 0 14 0M12 13l3-3"],["wall","Wall","M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"],["badges","Badges","M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"],["rules","Rules","M6 3h9l4 4v14H6zM9 11h7M9 15h7M9 7h3"]].map(([id,l,ic]) => { const nb = id === "badges" ? badgeCount(me||PIDS()[0]) : 0;
+        const due = (id === "tests" && testDue()) || (id === "wall" && me && ciOpenWeek() != null && !ciPosted(me, ciOpenWeek()));
+        return `<button role="tab" data-tab="${id}" aria-selected="${tab===id}" aria-label="${l}${due ? " (action needed)" : ""}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ic}"/></svg><span class="tl">${l}</span>${due ? `<i class="tdot"></i>` : nb ? `<i class="tnum">${nb}</i>` : ""}</button>`; }).join("")}
     </nav>
 
     ${tab === "today" ? `${me && testDue() && !M.pre ? `<div class="banner test"><span class="tag">2:00</span><div><b>${testDue() === 1 ? "Baseline test first" : `Test ${testDue()} is open`}</b>${testDue() === 1 ? "Before the grind starts, find out where you stand: 2 minutes each of max push-ups, sit-ups and squats." : "30 days of work. Time to see how much stronger you got."} <button class="linkbtn" data-tab="tests">Go to Max-Out →</button></div></div>` : ""}
     ${checkinCard()}
+    ${reminderCard()}
     <nav class="strip" aria-label="Days this week">${strip}</nav>
     ${dayHtml}` : ""}
     ${tab === "tests" ? testsHtml() : ""}
@@ -901,7 +907,7 @@ function render(){
         <div class="rule"><h4>The daily 50</h4><p>Monday through Friday: 50 push-ups, 50 sit-ups, 50 squats and 5 minutes of jump rope. Sets of 10, five rounds spread through the day. Once you go past 10 your form breaks, so don't. Each rep is 1 point and each minute of rope is 10, so a full weekday is worth 200 points before multipliers. Weekday reps are capped at 50 each.</p></div>
         <div class="rule"><h4>Bonus weekends</h4><p>Saturday and Sunday have no cap. Every rep scores 1.5x, so 10 push-ups is 15 points. This is where weeks get won.</p></div>
         <div class="rule"><h4>Streak</h4><p>Hit all four goals on a weekday and your streak grows. Weekends are bonus: a full weekend day adds to the streak, a skipped one never breaks it.</p></div>
-        <div class="rule"><h4>Hot streak bonus</h4><p>Go a perfect week (all 5 weekdays full, make-ups count) and you bank a flat bonus on that week's score. Stack perfect weeks back to back and the bonus grows. Miss one and it starts over at +100. It's a flat bonus, not a multiplier, so one rough week never leaves anybody out of reach.</p>
+        <div class="rule"><h4>Hot streak bonus</h4><p>Go a perfect week (every weekday that week full, make-ups count) and you bank a flat bonus on that week's score. Stack perfect weeks back to back and the bonus grows. Miss one and it starts over at +100. It's a flat bonus, not a multiplier, so one rough week never leaves anybody out of reach.</p>
           <div class="ladder">${HOT_BONUS.map((h,i) => `<span class="chip heat">${["1st","2nd","3rd+"][i]} week +${h}</span>`).join("")}</div></div>
         <div class="rule"><h4>Max-out tests</h4><p>Two tests: a baseline before tip-off and a final on Day 30. Two minutes each of max push-ups, sit-ups and squats. Pace yourself: you can rest, and only good-form reps count. The final pays ${TEST_PTS} points for every rep you beat your baseline by. This is where you see the work paying off.</p></div>
         <div class="rule"><h4>Comeback day</h4><p>Came up short on a weekday? The next day you get make-up sets (the green bubbles). Finish them on top of your normal 50 and the missed day counts as full again: streak saved, perfect week still alive, and the reps score.</p></div>
@@ -941,7 +947,7 @@ function coachLine(){
   const gap = ahead ? M.players[ahead].seasonPts - pl.seasonPts : 0;
   const second = st.filter(q => q !== me)[0];
   const lead = second ? pl.seasonPts - M.players[second].seasonPts : 0;
-  const race = ahead ? (gap > 0 ? `You're #${r}, ${fmt(gap)} back of ${P[ahead].name}. ${Math.ceil(gap / 10)} set${Math.ceil(gap/10) === 1 ? "" : "s"} closes it.` : `You're tied with ${P[ahead].name}, but they got there first. Finish your day first and you jump them.`)
+  const race = pl.seasonPts === 0 && (!ahead || M.players[ahead].seasonPts === 0) ? "Everybody's at zero. First one to finish today takes #1." : ahead ? (gap > 0 ? `You're #${r}, ${fmt(gap)} back of ${P[ahead].name}. ${Math.ceil(gap / 10)} set${Math.ceil(gap/10) === 1 ? "" : "s"} closes it.` : `You're tied with ${P[ahead].name}, but they got there first. Finish your day first and you jump them.`)
                      : pl.seasonPts > 0 ? (lead > 0 ? `You're #1 by ${fmt(lead)}. Don't give them air.` : `You're tied for #1. Break the tie.`) : "";
   const hr = new Date().getHours();
   const greet = hr < 12 ? `Hey ${name}, ready to take on the day?` : hr < 17 ? `Afternoon, ${name}. Let's keep it moving.` : `Evening, ${name}. Still time to finish strong.`;
@@ -1051,7 +1057,7 @@ function pickHtml(){
       <button class="btn no" id="npCancel" style="justify-content:center">Cancel</button></div></div>`;
   }
   return `<div class="pick" role="dialog" aria-modal="true" aria-label="Choose player"><div class="box">
-    <div class="lbl">50 Deep · Road to Tip-Off</div><h2>Who's grinding?</h2>
+    <div class="lbl">50 Deep · The Witters · 30-Day Challenge</div><h2>Who's grinding?</h2>
     <div class="grid">${ids.map(id => { const c = pc(id);
       return `<button class="pbtn" data-me="${id}" style="background:linear-gradient(160deg,${c.hex},${c.deep})">${esc(P[id].name)}<small>${esc(P[id].team || "Family")}</small></button>`; }).join("")}
       ${ids.length < MAX_PLAYERS ? `<button class="pbtn add" id="addBtn2">+ Add player<small>New to the family</small></button>` : ""}</div>
